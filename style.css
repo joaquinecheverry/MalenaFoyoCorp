@@ -1,0 +1,116 @@
+    @import url('https://fonts.googleapis.com/css2?family=Ballet:opsz@16..72&display=swap');
+
+    body {
+        margin: 0;
+        padding: 0;
+        background: url("printprint.jpeg") no-repeat center center fixed;
+        background-size: cover;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    
+    .background-text {
+        position: fixed;    
+        text-align: center;         /* vertical center */
+        left: 50%;               /* horizontal center */
+        transform: translate(-49%,  0%);
+        font-family: ballet;         /* scales with viewport width */
+        color: #BD9B46;  /* keep on one line */
+        pointer-events: none;    /* don’t block clicks */
+        z-index: -10;      
+        font-size: 220pt;     
+        width: 100vw;   /* behind everything */
+    }
+
+    #nav {
+        display: flex;
+        align-items: center;     
+        justify-content: space-between;
+        height: 5vh;
+        padding: 0 10px;
+        font-family: sans-serif;
+        background-color: white;
+        color: #BD9B46;
+        font-size: 18pt;
+        position:fixed;
+        width: 100vw;
+        box-sizing: border-box;
+    }
+    
+    #nav p {
+        margin: 0;
+        
+    }
+    
+    #place { text-align: left; }
+    #name  { text-align: center; }
+    #year  { text-align: right; }
+
+
+    .star {
+        color: white;
+        font-size: 20px;
+        transition: color 0.3s;
+        cursor:default;
+    }  
+
+    .star:hover {
+        color: #BD9B46;
+    }
+
+    .star1:hover {
+        color: #BD9B46;
+        transition: color 0.3s;
+        cursor: default;
+    }
+
+    .star1 {
+        color: white;
+        font-size: 20px;
+        margin-top: 35px;
+    }  
+
+    #maincolumn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+    }
+
+    .photodiv {
+        border: white 14px solid;
+        cursor: pointer;
+        transition: border 0.3s;
+    }
+
+    .photodiv:hover {
+        border: #BD9B46 14px solid;
+    }
+
+    .photodiv img {
+        display: block;     
+        width: 100%;       
+        height: auto;   
+    }
+    
+    .product {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 50px; 
+        margin-top: 50px;
+        padding-bottom:50px ;
+    }
+    
+    div {
+        border: magenta solid 0px;
+    }
+
+    p{
+        transition: color 0.3s;
+        cursor:default;
+    }
+
+    p:hover {
+        color: rgb(231, 74, 231);
+    }
