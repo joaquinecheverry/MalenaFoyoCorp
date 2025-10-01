@@ -391,9 +391,7 @@ function showTab(tabName) {
       case 'cart':
         contentArea.innerHTML = `
           <p>Your cart is currently empty.</p>
-          <p>Browse our collection and add items to see them here. We'll keep track of your selections and make checkout simple and secure.</p>
           <div style="background: #f9f9f9; border-radius: 5px;">
-            <p style="margin: 0; color: #666; font-style: italic;">Items you add will appear here with pricing and quantity options.</p>
           </div>
         `;
         break;
