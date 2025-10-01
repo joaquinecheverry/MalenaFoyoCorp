@@ -1,24 +1,21 @@
-// Bouncing Stars Script with Hover Effects
 const stars = [];
 const kRestitution = 0.98;
 let navHeight = 0;
 
 function setup() {
-  // Get the nav element height
   const navElement = document.getElementById('nav');
-  navHeight = navElement ? navElement.offsetHeight : 50; // fallback to 50px
+  navHeight = navElement ? navElement.offsetHeight : 50;
   
-  // Create canvas that covers the full window
   createCanvas(windowWidth, windowHeight);
   
-  // Position canvas behind other elements
   const canvas = document.querySelector('canvas');
   canvas.style.position = 'fixed';
   canvas.style.top = '0';
   canvas.style.left = '0';
-  canvas.style.zIndex = '-5'; // Behind content but above background
-  canvas.style.pointerEvents = 'auto'; // Enable mouse events for hover detection
-  
+  canvas.style.zIndex = '-1'; 
+  canvas.style.pointerEvents = 'none'; 
+  canvas.style.cursor = 'default';
+
   initStars();
   createModal();
 }
@@ -37,17 +34,16 @@ function initStars() {
         y: random(-8, 8) 
       },
       size: 30,
-      baseSize: 30, // Store original size
-      targetSize: 30, // Target size for smooth transitions
+      baseSize: 30, 
+      targetSize: 30, 
       color: 'white',
       borderColor: 'rgb(231, 74, 231)',
       rotation: 0,
       rotationSpeed: random(-0.1, 0.1),
       isHovered: false,
-      frozenVelocity: { x: 0, y: 0 } // Store velocity when frozen
+      frozenVelocity: { x: 0, y: 0 } 
     };
     
-    // Ensure minimum velocity
     if (abs(star.velocity.x) < 2) star.velocity.x = star.velocity.x > 0 ? 2 : -2;
     if (abs(star.velocity.y) < 2) star.velocity.y = star.velocity.y > 0 ? 2 : -2;
     
@@ -56,13 +52,11 @@ function initStars() {
 }
 
 function draw() {
-  clear(); // Clear the canvas to keep background visible
+  clear(); 
   
-  // Update nav height in case of window resize
   const navElement = document.getElementById('nav');
   navHeight = navElement ? navElement.offsetHeight : 50;
   
-  // Check for hover on each star
   checkHover();
   
   for (const star of stars) {
@@ -75,75 +69,74 @@ function draw() {
 }
 
 function checkHover() {
+  let anyStarHovered = false;
   const mousePos = { x: mouseX, y: mouseY };
   
   for (const star of stars) {
     const distance = dist(mousePos.x, mousePos.y, star.position.x, star.position.y);
     const wasHovered = star.isHovered;
     
-    // Check if mouse is within star radius
     star.isHovered = distance < star.size / 2;
     
-    // If just started hovering, freeze the star
+    if (star.isHovered) {
+      anyStarHovered = true;
+    }
+    
     if (star.isHovered && !wasHovered) {
       star.frozenVelocity.x = star.velocity.x;
       star.frozenVelocity.y = star.velocity.y;
       star.velocity.x = 0;
       star.velocity.y = 0;
-      star.targetSize = star.baseSize * 1.3; // Grow by 30%
+      star.targetSize = star.baseSize * 1.3; 
     }
     
-    // If just stopped hovering, restore movement
     if (!star.isHovered && wasHovered) {
       star.velocity.x = star.frozenVelocity.x;
       star.velocity.y = star.frozenVelocity.y;
-      star.targetSize = star.baseSize; // Return to original size
+      star.targetSize = star.baseSize; 
     }
+  }
+  
+  if (anyStarHovered) {
+    document.body.style.cursor = 'pointer';
+  } else {
+    document.body.style.cursor = 'default';
   }
 }
 
 function updateStarSize(star) {
-  // Smooth size transition
   const sizeDiff = star.targetSize - star.size;
-  star.size += sizeDiff * 0.15; // Smooth easing
+  star.size += sizeDiff * 0.15; 
 }
 
 function stepStar(star) {
-  // Apply velocity to position
   star.position.x += star.velocity.x;
   star.position.y += star.velocity.y;
   
-  // Update rotation
   star.rotation += star.rotationSpeed;
   
-  // Collision detection with walls
   const radius = star.size / 2;
   
-  // Left wall
   if (star.position.x - radius < 0) {
     star.velocity.x = abs(star.velocity.x) * kRestitution;
     star.position.x = radius;
   }
   
-  // Right wall
   if (star.position.x + radius > width) {
     star.velocity.x = -abs(star.velocity.x) * kRestitution;
     star.position.x = width - radius;
   }
   
-  // Top wall (nav div)
   if (star.position.y - radius < navHeight) {
     star.velocity.y = abs(star.velocity.y) * kRestitution;
     star.position.y = navHeight + radius;
   }
   
-  // Bottom wall
   if (star.position.y + radius > height) {
     star.velocity.y = -abs(star.velocity.y) * kRestitution;
     star.position.y = height - radius;
   }
   
-  // Collision detection with photodivs (only when not hovered)
   if (!star.isHovered) {
     checkPhotoCollisions(star, radius);
   }
@@ -155,43 +148,34 @@ function checkPhotoCollisions(star, radius) {
   photodivs.forEach(photodiv => {
     const rect = photodiv.getBoundingClientRect();
     
-    // Get photodiv boundaries
     const left = rect.left;
     const right = rect.right;
     const top = rect.top;
     const bottom = rect.bottom;
     
-    // Check if star is colliding with this photodiv
     const starLeft = star.position.x - radius;
     const starRight = star.position.x + radius;
     const starTop = star.position.y - radius;
     const starBottom = star.position.y + radius;
     
-    // Check for overlap
     if (starRight > left && starLeft < right && starBottom > top && starTop < bottom) {
-      // Calculate overlap distances
       const overlapLeft = starRight - left;
       const overlapRight = right - starLeft;
       const overlapTop = starBottom - top;
       const overlapBottom = bottom - starTop;
       
-      // Find the smallest overlap (closest edge)
       const minOverlap = Math.min(overlapLeft, overlapRight, overlapTop, overlapBottom);
       
       if (minOverlap === overlapLeft) {
-        // Hit left edge of photodiv
         star.velocity.x = -abs(star.velocity.x) * kRestitution;
         star.position.x = left - radius;
       } else if (minOverlap === overlapRight) {
-        // Hit right edge of photodiv
         star.velocity.x = abs(star.velocity.x) * kRestitution;
         star.position.x = right + radius;
       } else if (minOverlap === overlapTop) {
-        // Hit top edge of photodiv
         star.velocity.y = -abs(star.velocity.y) * kRestitution;
         star.position.y = top - radius;
       } else if (minOverlap === overlapBottom) {
-        // Hit bottom edge of photodiv
         star.velocity.y = abs(star.velocity.y) * kRestitution;
         star.position.y = bottom + radius;
       }
@@ -204,16 +188,13 @@ function drawStar(star) {
   translate(star.position.x, star.position.y);
   rotate(star.rotation);
   
-  // Draw star with border and rounded tips
   const outerRadius = star.size / 2;
   const innerRadius = outerRadius * 0.4;
   
-  // Draw border (thicker)
   fill(star.borderColor);
   noStroke();
   drawRoundedStar(outerRadius + 6, innerRadius + 5);
   
-  // Draw main star (white)
   fill(star.color);
   noStroke();
   drawRoundedStar(outerRadius, innerRadius);
@@ -224,7 +205,6 @@ function drawStar(star) {
 function drawRoundedStar(outerRadius, innerRadius) {
   const points = [];
   
-  // Calculate all star points
   for (let i = 0; i < 10; i++) {
     const angle = (i * PI) / 5;
     const radius = i % 2 === 0 ? outerRadius : innerRadius;
@@ -240,16 +220,13 @@ function drawRoundedStar(outerRadius, innerRadius) {
     const next = points[(i + 1) % points.length];
     const prev = points[(i - 1 + points.length) % points.length];
     
-    if (i % 2 === 0) { // Outer points - make them rounded
-      // Calculate vectors to adjacent points
+    if (i % 2 === 0) {
       const toPrev = createVector(prev.x - current.x, prev.y - current.y);
       const toNext = createVector(next.x - current.x, next.y - current.y);
       
-      // Normalize and scale for rounding
       toPrev.normalize().mult(3);
       toNext.normalize().mult(3);
       
-      // Create control points for curves
       const cp1 = { x: current.x + toPrev.x, y: current.y + toPrev.y };
       const cp2 = { x: current.x + toNext.x, y: current.y + toNext.y };
       
@@ -257,64 +234,24 @@ function drawRoundedStar(outerRadius, innerRadius) {
         vertex(cp1.x, cp1.y);
       }
       quadraticVertex(current.x, current.y, cp2.x, cp2.y);
-    } else { // Inner points - keep sharp
+    } else {
       vertex(current.x, current.y);
     }
   }
   endShape(CLOSE);
 }
 
-function checkHover() {
-  let anyStarHovered = false;
-  
-  for (const star of stars) {
-    const distance = dist(mouseX, mouseY, star.position.x, star.position.y);
-    const wasHovered = star.isHovered;
-    
-    // Check if mouse is within star radius (use half the size as radius)
-    star.isHovered = distance < star.size / 2;
-    
-    if (star.isHovered) {
-      anyStarHovered = true;
-    }
-    
-    // If just started hovering, freeze the star
-    if (star.isHovered && !wasHovered) {
-      star.frozenVelocity.x = star.velocity.x;
-      star.frozenVelocity.y = star.velocity.y;
-      star.velocity.x = 0;
-      star.velocity.y = 0;
-      star.targetSize = star.baseSize * 1.5; // Grow by 50%
-    }
-    
-    // If just stopped hovering, restore movement
-    if (!star.isHovered && wasHovered) {
-      star.velocity.x = star.frozenVelocity.x;
-      star.velocity.y = star.frozenVelocity.y;
-      star.targetSize = star.baseSize; // Return to original size
-    }
-  }
-  
-  // Update cursor style
-  const canvas = document.querySelector('canvas');
-  if (canvas) {
-    canvas.style.cursor = anyStarHovered ? 'pointer' : 'default';
-  }
-}
-
 function mousePressed() {
-  // Check if clicking on a star
   for (const star of stars) {
     const distance = dist(mouseX, mouseY, star.position.x, star.position.y);
     if (distance < star.size / 2) {
       showModal();
-      return; // Exit after first star clicked
+      return; 
     }
   }
 }
 
 function createModal() {
-  // Create modal overlay
   const modal = document.createElement('div');
   modal.id = 'star-modal';
   modal.style.cssText = `
@@ -331,7 +268,6 @@ function createModal() {
     box-sizing: border-box;
   `;
   
-  // Create content container
   const content = document.createElement('div');
   content.style.cssText = `
     background: white;
@@ -343,7 +279,6 @@ function createModal() {
     font-size: 18pt;
   `;
   
-  // Create close button
   const closeBtn = document.createElement('button');
   closeBtn.innerHTML = '×';
   closeBtn.style.cssText = `
@@ -363,7 +298,6 @@ function createModal() {
   `;
   closeBtn.onclick = hideModal;
   
-  // Create navigation tabs
   const nav = document.createElement('div');
   nav.style.cssText = `
     display: flex;
@@ -385,13 +319,12 @@ function createModal() {
       cursor: pointer;
       border-bottom: 3px solid transparent;
       color: #BD9B46;
-      transition: all 0.3s;
+      transition: all 0.1s;
     `;
     tab.onclick = () => showTab(tabName.toLowerCase());
     nav.appendChild(tab);
   });
   
-  // Create content area
   const contentArea = document.createElement('div');
   contentArea.id = 'modal-content';
   contentArea.style.cssText = `
@@ -399,14 +332,12 @@ function createModal() {
     line-height: 1.6;
   `;
   
-  // Assemble modal
   content.appendChild(closeBtn);
   content.appendChild(nav);
   content.appendChild(contentArea);
   modal.appendChild(content);
   document.body.appendChild(modal);
   
-  // Show About tab by default
   showTab('about');
 }
 
@@ -425,7 +356,6 @@ function hideModal() {
 }
 
 function showTab(tabName) {
-  // Update tab appearance
   const tabs = document.querySelectorAll('.modal-tab');
   tabs.forEach(tab => {
     if (tab.innerHTML.toLowerCase() === tabName) {
@@ -437,31 +367,32 @@ function showTab(tabName) {
     }
   });
   
-  // Update content
   const contentArea = document.getElementById('modal-content');
   if (contentArea) {
     switch(tabName) {
       case 'about':
         contentArea.innerHTML = `
-          <p>Welcome to our creative space where art meets technology. Here you'll find a curated collection of unique pieces that blend traditional craftsmanship with modern design sensibilities.</p>
-          <p>Our work explores the intersection of digital and physical realms, creating experiences that engage both the mind and the senses. Each piece tells a story of innovation, creativity, and artistic expression.</p>
-          <p>We believe in the power of art to transform spaces and inspire conversations. Every creation is carefully crafted with attention to detail and a passion for excellence.</p>
+          <p>Malena Foyo is a fashion designer, artist and co-founder of WiG, a creative platform where fashion, art, 
+          and design converge. Her work spans clothing, jewelry, furniture, and contemporary art, always driven by a 
+          vision of empowered femininity that is at once sexy, chic, and bold.</p>
+          <p>
+          With a design language rooted in sensuality, confidence, and experimentation, Malena creates pieces that blur
+          boundaries between disciplines. Through WiG and her independent projects, she continues to build a space where 
+          objects, fashion, and art exist side by side—inviting community, dialogue, and new ways of experiencing creativity
+          </p>
         `;
         break;
       case 'contact':
         contentArea.innerHTML = `
-          <p><strong>Email:</strong> hello@example.com</p>
-          <p><strong>Phone:</strong> +1 (555) 123-4567</p>
-          <p><strong>Location:</strong> Mexico City, Mexico</p>
-          <p><strong>Studio Hours:</strong> Monday - Friday, 9:00 AM - 6:00 PM</p>
-          <p>We'd love to hear from you! Whether you have questions about our work, want to discuss a custom project, or simply want to say hello, don't hesitate to reach out.</p>
+          <p>m@malenafoyo.com</p>
+          <p>@malenafoyo</p>
         `;
         break;
       case 'cart':
         contentArea.innerHTML = `
           <p>Your cart is currently empty.</p>
           <p>Browse our collection and add items to see them here. We'll keep track of your selections and make checkout simple and secure.</p>
-          <div style="margin-top: 20px; padding: 20px; background: #f9f9f9; border-radius: 5px;">
+          <div style="background: #f9f9f9; border-radius: 5px;">
             <p style="margin: 0; color: #666; font-style: italic;">Items you add will appear here with pricing and quantity options.</p>
           </div>
         `;
