@@ -1,0 +1,315 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Geist', Arial, sans-serif;
+    color: #BD9B46;
+    background: url("printprint.jpeg") no-repeat center center fixed;
+    background-size: cover;
+
+    overflow-x: hidden;
+}
+.background-text {
+    position: fixed;    
+    text-align: center;         
+    left: 50%;               
+    transform: translate(-49%, 0%);
+    font-family: ballet;         
+    color: #BD9B46;  
+    pointer-events: none;    
+    z-index: -10;      
+    font-size: 190pt;     
+    width: 100vw;   
+}
+
+#nav {
+    display: flex;
+    align-items: center;     
+    justify-content: space-between;
+    height: 5vh;
+    padding: 0 10px;
+    font-family: sans-serif;
+    background-color: white;
+    color: #BD9B46;
+    font-size: 18pt;
+    position: fixed;
+    width: 100vw;
+    box-sizing: border-box;
+    top: 0;
+    z-index: 100;
+}
+
+.container {
+    width: 1280px;
+    height: 832px;
+    position: relative;    margin: 0 auto;
+}
+
+/* Header Styles */
+.header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 52px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 11px;
+    z-index: 10;
+}
+
+.location, .brand-name, .year {
+    font-size: 18pt;
+    color: #BD9B46;
+}
+
+.brand-name {
+    text-align: center;
+    flex: 1;
+}
+
+.year {
+    text-align: right;
+}
+
+/* Product Section */
+.product-section {
+    position: absolute;
+    top: 135px;
+    left: 29px;
+    display: flex;
+    gap: 196px;
+}
+
+/* Product Image */
+.product-image {
+    position: relative;
+}
+
+p:hover {
+    color: #E55DB8;
+    cursor: default;
+}
+
+.dress-image {
+    width: 457px;
+    height: auto;
+    border: 8px white solid;
+    transition: border 0.1s;
+    display: block;
+}
+
+.dress-image:hover {
+    border: 8px #BD9B46 solid;
+    cursor: pointer;
+}
+/* Product Details */
+.product-details {
+    position: relative;
+    width: 609px;
+}
+.star1 {
+    color: white;
+    font-size: 20px;
+    margin-top: 80px;
+    position: absolute;
+    transform: translateX(-50%);
+    left:50%;
+    transition: color 0.2s;
+}
+
+.star1:hover {
+    color:#BD9B46 !important;
+}
+
+.product-info {
+    padding: 8px 0px;
+    margin-bottom: 64px;
+}
+
+.product-name {
+    font-size: 18pt;
+background-color: white;
+margin-bottom: 10px;
+padding: 7px;
+}
+
+.product-material {
+    font-size: 18pt;
+    margin-bottom: 10px;
+    padding: 7px;
+    background-color: white;
+}
+
+.product-origin {
+    font-size: 18pt;
+    background-color: white;
+    margin-bottom: 10px;
+    padding: 7px;
+}
+
+/* Color Selector */
+.color-selector {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 175px;
+    width: 184px;
+}
+
+.color-label {
+    background: white;
+    padding: 7px;
+    padding-right: 2px;
+
+    font-size: 18pt;
+    line-height: 32px;
+    width: 184px;
+}
+
+.back {
+    position: absolute;
+    background-color: white;
+    top: 80px;
+    font-size: 18pt;
+    color: #BD9B46;
+    margin-left: 125px;
+    width: 70px;
+    z-index: 20;
+    padding: 7px;
+    transition: color 0.1s;
+}
+
+.back:hover {
+    position: absolute;
+    background-color: #E55DB8;
+    top: 80px;
+    font-size: 18pt;
+    color: white;
+    margin-left: 125px;
+    width: 70px;
+    z-index: 20;
+    padding: 7px;
+}
+
+.color-arrow {
+    background: white;
+    border: none;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18pt;
+    color: #BD9B46;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.color-arrow:hover {
+    color: white;
+    background-color: #E55DB8;
+    rotate: 90deg;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    top: 560px;
+    position: absolute;
+}
+
+.cart-btn, .checkout-btn {
+    background: white;
+    border: none;
+    font-size: 18pt;
+    color: #BD9B46;
+    cursor: pointer;
+    transition: color 0.2s;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px;
+
+}
+
+.cart-btn {
+    gap: 29px;
+}
+
+
+.cart-btn:hover, .checkout-btn:hover {
+background-color: #E55DB8;
+color: white;
+}
+
+.cart-plus {
+    font-size: 18pt;
+}
+
+/* Responsive Design */
+@media (max-width: 1280px) {
+    .container {
+        width: 100%;
+        height: auto;
+        min-height: 100vh;
+    }
+    
+    .hero-title {
+        font-size: clamp(60px, 15vw, 255px);
+        width: 100%;
+        padding: 0 20px;
+    }
+    
+    .product-section {
+        position: relative;
+        flex-direction: column;
+        gap: 40px;
+        padding: 300px 20px 40px;
+    }
+    
+    .product-details {
+        width: 100%;
+    }
+    
+    .dress-image {
+        width: 100%;
+        max-width: 427px;
+        height: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        height: auto;
+        padding: 10px;
+        gap: 10px;
+    }
+    
+    .location, .brand-name, .year {
+        font-size: 24px;
+    }
+    
+    .product-name, .product-material, .product-origin, 
+    .color-label, .cart-btn, .checkout-btn {
+        font-size: 24px;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .cart-btn, .checkout-btn {
+        width: 100%;
+        height: 60px;
+    }
+}
