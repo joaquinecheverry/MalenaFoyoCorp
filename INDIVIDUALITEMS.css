@@ -13,18 +13,24 @@ body {
 
     overflow-x: hidden;
 }
+
 .background-text {
-    position: fixed;    
-    text-align: center;         
-    left: 50%;               
-    transform: translate(-49%, 0%);
-    font-family: ballet;         
-    color: #BD9B46;  
-    pointer-events: none;    
-    z-index: -10;      
-    font-size: 190pt;     
-    width: 100vw;   
+  position: fixed;
+  text-align: center;
+  left: 50%;
+  transform: translate(-49%, 0%);
+  font-family: ballet;
+  color: #BD9B46;
+  pointer-events: none;
+  z-index: -10;
+  font-size: 220pt;
+  width: 100vw;
+  /* keep it one line */
+      /* match homepage spacing */
 }
+
+
+
 
 #nav {
     display: flex;
@@ -165,12 +171,12 @@ padding: 7px;
 
 .color-label {
     background: white;
-    padding: 7px;
-    padding-right: 2px;
-
+    padding: 7px 10px;
     font-size: 18pt;
-    line-height: 32px;
-    width: 184px;
+    line-height: 1.4;
+    display: inline-block;
+    width: auto; /* dynamically fits text */
+    white-space: nowrap;
 }
 
 .back {
@@ -198,31 +204,15 @@ padding: 7px;
     padding: 7px;
 }
 
-.color-arrow {
-    background: white;
-    border: none;
-    width: 48px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18pt;
-    color: #BD9B46;
-    cursor: pointer;
-    transition: color 0.2s;
-}
-.color-arrow:hover {
-    color: white;
-    background-color: #E55DB8;
-    rotate: 90deg;
-}
 
-/* Action Buttons */
-.action-buttons {
-    display: flex;
-    gap: 10px;
-    top: 560px;
-    position: absolute;
+
+.action-buttons{
+  position: absolute;
+  left: 0;              /* <-- align with title/color */
+  right: auto;
+  top: 560px;           /* keep your existing vertical placement */
+  display: flex;
+  gap: 10px;
 }
 
 .cart-btn, .checkout-btn {
@@ -284,6 +274,7 @@ color: white;
         max-width: 427px;
         height: auto;
     }
+
 }
 
 @media (max-width: 768px) {
@@ -313,3 +304,256 @@ color: white;
         height: 60px;
     }
 }
+
+.selector-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.color-label {
+  background: white;
+  padding: 7px 10px;
+  font-size: 18pt;
+  line-height: 32px;
+  color: #BD9B46;
+}
+
+/* ===== Canonical size selector (kept flush + centered) ===== */
+.selector-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.color-label {
+  background: #fff;
+  padding: 7px 10px;
+  font-size: 18pt;
+  line-height: 32px;
+  color: #BD9B46;
+  white-space: nowrap;
+}
+
+/* wrapper: arrow/current-size + drawer */
+.size-dropdown {
+  position: relative;
+  display: inline-flex;
+  align-items: stretch;
+  z-index: 20;
+}
+
+/* arrow/current-size button */
+.size-trigger{
+  background: #fff;
+  color: #BD9B46;
+border: none;
+  height: 48px;
+  min-width: 48px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18pt;
+  cursor: pointer;
+  transition: color .2s, background-color .2s, transform .2s;
+}
+
+/* rotate only when NOT selected */
+.size-trigger:not(.selected):hover{
+  background:#E55DB8;
+  color:#fff;
+  transform: rotate(90deg);
+}
+.size-trigger.open:not(.selected){ transform: rotate(90deg); }
+
+/* when a size is chosen: show letters and keep steady */
+.size-trigger.selected{
+  transform: none !important;
+}
+
+/* drawer attaches flush, shares the border */
+.size-drawer{
+  position: absolute;
+  top: calc(100% - 2px); /* overlap the trigger's bottom border so it's flush */
+  left: 0;
+  display: none;
+  background: #fff;
+
+            /* merges with trigger */
+ 
+  min-width: 100%;
+  padding: 6px 0;
+  box-shadow: none;
+}
+
+/* while open, flatten the trigger's bottom corners so it looks like one piece */
+.size-trigger.open{
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* options: centered text */
+.size-option{
+  background: #fff;
+  border: none;
+  color: #BD9B46;
+  font-size: 16pt;
+  height: 44px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* centers “XS / S / M …” */
+  cursor: pointer;
+  transition: background-color .15s, color .15s;
+}
+.size-option:hover{ background:#E55DB8; color:#fff; }
+.size-option.active{ background:#E55DB8; color:#fff; }
+
+/* make the right column the containing block for abs children */
+.page-product .product-details{
+  position: relative !important;
+}
+
+/* pin buttons to the left edge of the right column */
+.page-product .product-details .action-buttons{
+  position: absolute !important;
+  left: 0 !important;
+  right: auto !important;
+  top: 560px;          /* keep your current vertical placement */
+  display: flex;
+  gap: 10px;
+}
+/* --- Mini-cart inside modal --- */
+.cart-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+}
+.cart-line {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 12px;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #BD9B46;
+  padding: 8px;
+}
+.cart-line img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border: 1px solid #eee;
+}
+.cart-line-info {
+  color: #BD9B46;
+}
+.cart-title {
+  font-size: 16pt;
+  line-height: 1.1;
+}
+.cart-variant, .cart-qty-price {
+  font-size: 12pt;
+}
+.cart-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border-top: 2px solid #BD9B46;
+  margin-top: 6px;
+  color: #BD9B46;
+}
+.cart-checkout-btn {
+  background: #E55DB8;
+  color: #fff;
+  text-decoration: none;
+  padding: 8px 14px;
+}
+.cart-checkout-btn:hover {
+  filter: brightness(0.95);
+}
+
+.cart-line {
+  display: grid;
+  grid-template-columns: 64px 1fr 30px;
+  gap: 12px;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #BD9B46;
+  padding: 8px;
+  position: relative;
+}
+
+.cart-remove {
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: #BD9B46;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.cart-remove:hover {
+  color: #E55DB8;
+}
+
+.cart-btn:disabled,
+.checkout-btn:disabled {
+  background: #b0b0b0 !important;
+  color: #000000 !important;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Left column container so Back aligns with image */
+.product-left{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;      /* aligns Back with image's left edge */
+  max-width: 457px;
+  flex: 0 0 457px;              /* same fixed width you were using */
+}
+
+/* Ensure the image container is a positioning anchor */
+.page-product .product-image { position: relative; }
+
+/* Place Back completely above the image, aligned to the left edge */
+.page-product .product-image .back {
+  position: absolute;
+  left: 0;         /* sit above the image */
+  margin-bottom: 12px;    /* gap between Back and the image frame */
+  background: #fff;
+  color: #BD9B46;
+  text-decoration: none;
+  line-height: 1;
+  z-index: 3;
+  display: inline-block;
+}
+
+/* Optional hover */
+.page-product .product-image .back:hover {
+  background: #E55DB8;
+  color: #fff;
+}
+
+/* PDP-only Back button: sit ABOVE the image, flush-left */
+.page-product .product-image { position: relative; }           /* anchor for absolute child */
+.page-product .product-left { position: relative; }            /* safe container */
+
+.page-product a.back{
+  position: absolute;
+  top: -52px;          /* move it fully above the image frame (tweak: -48 to -64px) */
+  left: 0;
+  margin: 0 !important;         /* cancel old margin-left */
+  background: #fff;
+  color: #BD9B46;
+  padding: 8px;
+  line-height: 1;
+  z-index: 5;
+}
+.page-product a.back:hover{ background:#E55DB8; color:#fff; }
+

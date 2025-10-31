@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Malena Foyo Site</title>
+<link rel="stylesheet" href="INDIVIDUALITEMS.css?v=5">
+
+<link href="https://fonts.googleapis.com/css2?family=Ballet:opsz@16..72&display=swap" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+
+  <style>
+    /* keep image sizing consistent */
+    .product-image img.dress-image { width: 100%; height: auto; display: block; }
+
+
+    .img-nav:hover { background:#E55DB8; }
+    .img-nav:active { transform: translateY(1px); }
+
+    .img-nav.prev { left: 0; }
+    .img-nav.next { right: 0; }
+
+    /* container must be relative so arrows position correctly */
+    .product-image { position: relative; }
+    /* 1) Give a little more breathing room beneath the Back button
+   (pushes the whole product section down a bit) */
+.page-product .product-section {
+  /* if your css uses absolute positioning with top:135px, bump it a little */
+  top: 160px !important;   /* was ~135px; adjust to taste */
+  /* if yours is not absolutely positioned, you can instead use: */
+  /* margin-top: 24px !important; */
+}
+
+
+
+/* put arrows INSIDE the image */
+.product-image { 
+  position: relative; 
+  padding-top: 0;              /* remove the band we added earlier */
+}
+
+/* the arrow buttons: white, no outline, on top of the image */
+.img-nav {
+  position: absolute;
+  bottom: 15px; /* move to bottom */
+  top: auto; /* remove top alignment */
+  transform: translateY(0);
+  background: none; /* remove any box */
+  color: white;
+  border: none;
+  font-size: 2.2rem;
+  cursor: pointer;
+  z-index: 2;
+}
+.img-nav.prev{  left: 25px; }
+.img-nav.next{ right: 25px; }
+
+/* optional hover (keep simple, still no outline) */
+.img-nav:hover{ color:#E55DB8; }
+
+/* move the whole PDP back to original vertical position */
+.page-product .product-section{
+  top: 135px !important;       /* was bumped to ~160; set back to original */
+}
+/* Gallery arrows: only the glyph, no box */
+.product-image .img-nav{
+  background: transparent !important;
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-appearance: none;
+  appearance: none;
+  color: #fff;              /* arrow color */
+}
+
+/* keep hover clean (no fill), just tint the glyph if you want */
+.product-image .img-nav:hover,
+.product-image .img-nav:focus {
+  background: transparent !important;
+  color: #E55DB8;
+}
+
+
+  </style>
+</head>
+<body class="page-product">
+  <div id="nav">
+    <p id="place">CDMX</p>
+    <p id="name">MALENA FOYO</p>
+    <p id="year">2025</p>
+  </div>
+  <div class="background-text">Golden Dreams</div>
+  <div class="star1">★</div>
+
+  <div class="container">
+    <main class="main-content">
+<div class="product-section">
+  <!-- LEFT COLUMN -->
+  <div class="product-left">
+
+
+<div class="product-image photodiv" style="max-width:457px; flex:0 0 457px;">
+  <!-- Back button lives inside image container -->
+  <a href="index.html" class="back">Back</a>
+
+  <!-- gallery arrows -->
+  <button class="img-nav prev" id="imgPrev" aria-label="Previous image">‹</button>
+  <button class="img-nav next" id="imgNext" aria-label="Next image">›</button>
+
+  <img id="pdp-image" src="" alt="" class="dress-image" />
+</div>
+
+  </div>
+
+        <!-- Right: details -->
+        <div class="product-details">
+          <div class="product-info photodiv">
+            <p id="pdp-title" class="product-name">Loading…</p>
+            <p id="pdp-material" class="product-material">—</p>
+            <p id="pdp-origin" class="product-origin">—</p>
+
+          </div>
+
+          <!-- Static color (no picker) -->
+          <div class="color-selector photodiv" id="colorRow" style="display:none;">
+            <span class="color-label" id="colorLabel">Color: —</span>
+              <!-- Size Drawer Trigger -->
+  <div class="size-dropdown" id="sizeDropdown">
+    <button class="size-trigger" id="sizeTrigger">></button>
+    <div class="size-drawer" id="sizeDrawer"></div>
+  </div>
+</div>
+
+          <!-- Size selector -->
+<div class="size-selector photodiv" id="sizeRow" style="display:none;">
+  <span class="size-label" id="sizeLabel">Size: —</span>
+  <button class="size-arrow" id="sizeNext" aria-label="View next size">&gt;</button>
+</div>
+
+          <div class="action-buttons photodiv">
+            <button id="addToCart" class="cart-btn">
+              CART <span class="cart-plus">+</span>
+            </button>
+            <button id="checkout" class="checkout-btn">CHECKOUT</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    /* ================= p5 stars (hover, bounce, click-to-modal) ================= */
+    const stars = [];
+    const kRestitution = 0.98;
+    let navHeight = 0;
+
+    function setup() {
+      const navElement = document.getElementById('nav');
+      navHeight = navElement ? navElement.offsetHeight : 50;
+      createCanvas(windowWidth, windowHeight);
+
+      const canvas = document.querySelector('canvas');
+      canvas.style.position = 'fixed';
+      canvas.style.top = '0';
+      canvas.style.left = '0';
+      canvas.style.zIndex = '-1';
+      canvas.style.pointerEvents = 'none';
+      canvas.style.cursor = 'default';
+
+      initStars();
+      createModal(); // modal on PDP too
+    }
+
+    function initStars() {
+      stars.length = 0;
+      for (let i = 0; i < 3; i++) {
+        const star = {
+          position: { x: random(50, width - 50), y: random(navHeight + 50, height - 50) },
+          velocity: { x: random(-8, 8), y: random(-8, 8) },
+          size: 30, baseSize: 30, targetSize: 30,
+          color: 'white', borderColor: 'rgb(231, 74, 231)',
+          rotation: 0, rotationSpeed: random(-0.1, 0.1),
+          isHovered: false,
+          frozenVelocity: { x: 0, y: 0 }
+        };
+        if (abs(star.velocity.x) < 2) star.velocity.x = star.velocity.x > 0 ? 2 : -2;
+        if (abs(star.velocity.y) < 2) star.velocity.y = star.velocity.y > 0 ? 2 : -2;
+        stars.push(star);
+      }
+    }
+
+    function draw() {
+      clear();
+      const navElement = document.getElementById('nav');
+      navHeight = navElement ? navElement.offsetHeight : 50;
+
+      checkHover(); // pause + grow on hover
+
+      for (const star of stars) {
+        updateStarSize(star);
+        if (!star.isHovered) stepStar(star);
+        drawStar(star);
+      }
+    }
+
+    function checkHover() {
+      let anyStarHovered = false;
+      const mousePos = { x: mouseX, y: mouseY };
+
+      for (const star of stars) {
+        const distance = dist(mousePos.x, mousePos.y, star.position.x, star.position.y);
+        const wasHovered = star.isHovered;
+
+        star.isHovered = distance < star.size / 2;
+        if (star.isHovered) anyStarHovered = true;
+
+        if (star.isHovered && !wasHovered) {
+          star.frozenVelocity.x = star.velocity.x;
+          star.frozenVelocity.y = star.velocity.y;
+          star.velocity.x = 0; star.velocity.y = 0;
+          star.targetSize = star.baseSize * 1.3;
+        }
+        if (!star.isHovered && wasHovered) {
+          star.velocity.x = star.frozenVelocity.x;
+          star.velocity.y = star.frozenVelocity.y;
+          star.targetSize = star.baseSize;
+        }
+      }
+      document.body.style.cursor = anyStarHovered ? 'pointer' : 'default';
+    }
+
+    function updateStarSize(star) { star.size += (star.targetSize - star.size) * 0.15; }
+
+    function stepStar(star){
+      star.position.x += star.velocity.x;
+      star.position.y += star.velocity.y;
+      star.rotation += star.rotationSpeed;
+
+      const radius = star.size / 2;
+
+      // walls + nav bar
+      if (star.position.x - radius < 0){
+        star.velocity.x = Math.abs(star.velocity.x) * kRestitution;
+        star.position.x = radius;
+      }
+      if (star.position.x + radius > width){
+        star.velocity.x = -Math.abs(star.velocity.x) * kRestitution;
+        star.position.x = width - radius;
+      }
+      if (star.position.y - radius < navHeight){
+        star.velocity.y = Math.abs(star.velocity.y) * kRestitution;
+        star.position.y = navHeight + radius;
+      }
+      if (star.position.y + radius > height){
+        star.velocity.y = -Math.abs(star.velocity.y) * kRestitution;
+        star.position.y = height - radius;
+      }
+
+      // bounce off PDP blocks (anything with .photodiv)
+      checkPhotoCollisions(star, radius);
+    }
+
+    function checkPhotoCollisions(star, radius){
+      const blocks = document.querySelectorAll('.photodiv');
+      blocks.forEach(el => {
+        const r = el.getBoundingClientRect();
+        const left=r.left, right=r.right, top=r.top, bottom=r.bottom;
+
+        const starLeft   = star.position.x - radius;
+        const starRight  = star.position.x + radius;
+        const starTop    = star.position.y - radius;
+        const starBottom = star.position.y + radius;
+
+        const overlap = starRight > left && starLeft < right && starBottom > top && starTop < bottom;
+        if (!overlap) return;
+
+        const overlapLeft   = starRight - left;
+        const overlapRight  = right - starLeft;
+        const overlapTop    = starBottom - top;
+        const overlapBottom = bottom - starTop;
+        const minOverlap = Math.min(overlapLeft, overlapRight, overlapTop, overlapBottom);
+
+        if (minOverlap === overlapLeft){
+          star.velocity.x = -Math.abs(star.velocity.x) * kRestitution;
+          star.position.x = left - radius;
+        } else if (minOverlap === overlapRight){
+          star.velocity.x =  Math.abs(star.velocity.x) * kRestitution;
+          star.position.x = right + radius;
+        } else if (minOverlap === overlapTop){
+          star.velocity.y = -Math.abs(star.velocity.y) * kRestitution;
+          star.position.y = top - radius;
+        } else if (minOverlap === overlapBottom){
+          star.velocity.y =  Math.abs(star.velocity.y) * kRestitution;
+          star.position.y = bottom + radius;
+        }
+      });
+    }
+
+    function drawStar(star) {
+      push();
+      translate(star.position.x, star.position.y);
+      rotate(star.rotation);
+
+      const outerRadius = star.size / 2;
+      const innerRadius = outerRadius * 0.4;
+
+      fill(star.borderColor); noStroke();
+      drawRoundedStar(outerRadius + 6, innerRadius + 5);
+
+      fill(star.color); noStroke();
+      drawRoundedStar(outerRadius, innerRadius);
+
+      pop();
+    }
+
+    function drawRoundedStar(outerRadius, innerRadius) {
+      const points = [];
+      for (let i = 0; i < 10; i++) {
+        const angle = (i * PI) / 5;
+        const radius = i % 2 === 0 ? outerRadius : innerRadius;
+        points.push({ x: cos(angle) * radius, y: sin(angle) * radius });
+      }
+      beginShape();
+      for (let i = 0; i < points.length; i++) {
+        const current = points[i];
+        const next = points[(i + 1) % points.length];
+        const prev = points[(i - 1 + points.length) % points.length];
+
+        if (i % 2 === 0) {
+          const toPrev = createVector(prev.x - current.x, prev.y - current.y);
+          const toNext = createVector(next.x - current.x, next.y - current.y);
+          toPrev.normalize().mult(3); toNext.normalize().mult(3);
+          const cp1 = { x: current.x + toPrev.x, y: current.y + toPrev.y };
+          const cp2 = { x: current.x + toNext.x, y: current.y + toNext.y };
+          if (i === 0) vertex(cp1.x, cp1.y);
+          quadraticVertex(current.x, current.y, cp2.x, cp2.y);
+        } else {
+          vertex(current.x, current.y);
+        }
+      }
+      endShape(CLOSE);
+    }
+
+    /* click opens modal */
+    function mousePressed() {
+      for (const star of stars) {
+        const d = dist(mouseX, mouseY, star.position.x, star.position.y);
+        if (d < star.size / 2) { showModal(); break; }
+      }
+    }
+
+    /* ================= modal (About / Contact / Cart) ================= */
+    function createModal() {
+      const modal = document.createElement('div');
+      modal.id = 'star-modal';
+      modal.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+        z-index: 1000; display: none; justify-content: flex-start; align-items: center;
+        padding-left: 20px; box-sizing: border-box;`;
+
+      const content = document.createElement('div');
+      content.style.cssText = `
+        background: white; padding: 0px; max-width: 900px; width: 100%;
+        position: relative; color: #BD9B46; font-size: 18pt;`;
+
+      const closeBtn = document.createElement('button');
+      closeBtn.innerHTML = '×';
+      closeBtn.style.cssText = `
+        position: absolute; top: 10px; right: 15px; background: none; border: none;
+        font-size: 30px; cursor: pointer; color: #BD9B46; width: 30px; height: 30px;
+        display: flex; align-items: center; justify-content: center;`;
+      closeBtn.onclick = hideModal;
+
+      const nav = document.createElement('div');
+      nav.style.cssText = `display:flex; gap:30px; margin-bottom:0;`;
+
+      ['About','Contact','Cart'].forEach(name=>{
+        const b = document.createElement('button');
+        b.textContent = name;
+        b.className = 'modal-tab';
+        b.style.cssText = `
+          background:none; border:none; padding:0; font-size:18pt; cursor:pointer;
+          border-bottom:3px solid transparent; color:#BD9B46; transition:all .1s;`;
+        b.onclick = () => showTab(name.toLowerCase());
+        nav.appendChild(b);
+      });
+
+      const area = document.createElement('div');
+      area.id = 'modal-content';
+      area.style.cssText = `min-height:200px; line-height:1.6;`;
+
+      content.appendChild(closeBtn);
+      content.appendChild(nav);
+      content.appendChild(area);
+      modal.appendChild(content);
+      document.body.appendChild(modal);
+
+      showTab('about');
+    }
+    function showModal(){ const m = document.getElementById('star-modal'); if (m) m.style.display = 'flex'; }
+    function hideModal(){ const m = document.getElementById('star-modal'); if (m) m.style.display = 'none'; }
+function showTab(tabName){
+  const tabs = document.querySelectorAll('.modal-tab');
+  tabs.forEach(t=>{
+    if (t.textContent.toLowerCase() === tabName){
+      t.style.color='#BD9B46'; t.style.borderBottomColor='#BD9B46';
+    } else { t.style.color='#666'; t.style.borderBottomColor='transparent'; }
+  });
+
+  const area = document.getElementById('modal-content');
+  if (!area) return;
+
+  if (tabName === 'about'){
+    area.innerHTML = `
+      <p>Malena Foyo is a fashion designer, artist and co-founder of WiG, a creative platform where fashion, art,
+      and design converge. Her work spans clothing, jewelry, furniture, and contemporary art.</p>`;
+  } else if (tabName === 'contact'){
+    area.innerHTML = `<p>m@malenafoyo.com</p><p>@malenafoyo</p>`;
+  } else if (tabName === 'cart'){
+    // show a quick placeholder, then render live cart
+    area.innerHTML = `<p>Loading…</p>`;
+    renderCartIntoModal();   // <— KEY LINE
+  }
+}
+
+
+    /* ================= Shopify PDP (live data + gallery) ================= */
+    const SHOPIFY_DOMAIN = 'malenafoyo.myshopify.com';
+    const SHOPIFY_API_VERSION = '2024-10';
+    const SHOPIFY_STOREFRONT_TOKEN = 'b237e2ac75f2a4fd0e9af68435e45e20';
+    const SF_ENDPOINT = `https://${SHOPIFY_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`;
+
+    async function sf(query, variables = {}) {
+      const r = await fetch(SF_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Shopify-Storefront-Access-Token': SHOPIFY_STOREFRONT_TOKEN
+        },
+        body: JSON.stringify({ query, variables })
+      });
+      const txt = await r.text();
+      if (!r.ok) throw new Error(`HTTP ${r.status}: ${txt}`);
+      const j = JSON.parse(txt);
+      if (j.errors) throw new Error('GraphQL: ' + JSON.stringify(j.errors));
+      return j.data;
+    }
+
+const PRODUCT_BY_HANDLE = `
+query ProductByHandle($handle: String!) {
+  product(handle: $handle) {
+    id
+    title
+    description
+    featuredImage { url altText }
+    images(first: 20) {
+      edges { node { url altText } }
+    }
+    priceRange { minVariantPrice { amount currencyCode } }
+
+    materialMF: metafield(namespace: "custom", key: "material") { value }
+    madeInMF:   metafield(namespace: "custom", key: "made_in") { value }
+
+    options { name values }
+    variants(first: 50) {
+      edges {
+        node {
+          id
+          title
+          availableForSale
+          selectedOptions { name value }
+          price { amount currencyCode }
+        }
+      }
+    }
+  }
+}
+`;
+
+
+
+    const CART_CREATE = `
+      mutation CartCreate($lines: [CartLineInput!]) {
+        cartCreate(input: { lines: $lines }) {
+          cart { id checkoutUrl }
+        }
+      }
+    `;
+    const CART_LINES_ADD = `
+      mutation CartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
+        cartLinesAdd(cartId: $cartId, lines: $lines) {
+          cart { id checkoutUrl }
+        }
+      }
+    `;
+
+    const CART_LINES_REMOVE = `
+  mutation CartLinesRemove($cartId: ID!, $lineIds: [ID!]!) {
+    cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
+      cart {
+        id
+        totalQuantity
+        checkoutUrl
+      }
+    }
+  }
+`;
+
+
+    const CART_QUERY = `
+  query GetCart($id: ID!) {
+    cart(id: $id) {
+      id
+      checkoutUrl
+      totalQuantity
+      cost {
+        subtotalAmount { amount currencyCode }
+        totalAmount    { amount currencyCode }
+      }
+      lines(first: 50) {
+        edges {
+          node {
+            id
+            quantity
+            merchandise {
+              ... on ProductVariant {
+                id
+                title
+                image { url altText }
+                product { title handle }
+                price { amount currencyCode }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+
+    let product = null;
+    let selected = {};
+    let cartId = localStorage.getItem('cartId') || null;
+
+    // gallery state
+    let gallery = [];
+    let galleryIndex = 0;
+
+    function getParam(name) {
+      const u = new URL(location.href);
+      return u.searchParams.get(name);
+    }
+
+    function renderPDP() {
+      if (!product) return;
+
+// Title
+document.getElementById('pdp-title').textContent = product.title || '—';
+
+// Material
+const material = product.materialMF?.value?.trim() || 'Polyester';
+document.getElementById('pdp-material').textContent = material;
+
+// Made In
+const madeIn = product.madeInMF?.value?.trim() || 'CDMX';
+document.getElementById('pdp-origin').textContent = `Made in ${madeIn}`;
+
+
+      // Build gallery: prefer full image list; fall back to featured
+      gallery = (product.images?.edges || [])
+                  .map(e => ({ url: e.node.url, alt: e.node.altText || product.title || '' }));
+      if (!gallery.length && product.featuredImage) {
+        gallery = [{ url: product.featuredImage.url, alt: product.featuredImage.altText || product.title || '' }];
+      }
+      galleryIndex = 0;
+      showImage(0);
+
+      // Static color display
+      const colorOpt = product.options?.find(o => /color/i.test(o.name));
+      const colorRow = document.getElementById('colorRow');
+      const colorLabel = document.getElementById('colorLabel');
+      if (colorOpt && colorOpt.values?.length) {
+        colorRow.style.display = '';
+        colorLabel.textContent = `Color: ${colorOpt.values[0]}`;
+        selected[colorOpt.name] = colorOpt.values[0];
+      } else {
+        colorRow.style.display = 'none';
+      }
+const sizeOpt      = product.options.find(o => /size/i.test(o.name));
+const sizeDropdown = document.getElementById('sizeDropdown');
+const sizeTrigger  = document.getElementById('sizeTrigger');
+const sizeDrawer   = document.getElementById('sizeDrawer');
+
+if (sizeOpt && sizeOpt.values?.length) {
+  sizeTrigger.textContent = '>';           // start as arrow
+  sizeTrigger.classList.remove('selected');
+
+  sizeDrawer.innerHTML = '';
+  sizeOpt.values.forEach(val => {
+    const btn = document.createElement('button');
+    btn.className = 'size-option';
+    btn.textContent = val;
+    btn.onclick = () => {
+      selected[sizeOpt.name] = val;
+      sizeTrigger.textContent = val;       // show chosen letters
+      sizeTrigger.classList.add('selected');
+      sizeTrigger.classList.remove('open');
+      [...sizeDrawer.children].forEach(b =>
+        b.classList.toggle('active', b.textContent === val)
+      );
+      sizeDrawer.style.display = 'none';
+      updateAvailabilityUI();
+    };
+    sizeDrawer.appendChild(btn);
+  });
+
+  sizeTrigger.onclick = (e) => {
+    e.stopPropagation();
+    const willOpen = sizeDrawer.style.display !== 'block';
+    sizeDrawer.style.display = willOpen ? 'block' : 'none';
+    // only show “open” rotation when not selected
+    sizeTrigger.classList.toggle('open', willOpen && !sizeTrigger.classList.contains('selected'));
+  };
+
+  document.addEventListener('click', (e) => {
+    if (!sizeDropdown.contains(e.target)) {
+      sizeDrawer.style.display = 'none';
+      sizeTrigger.classList.remove('open');
+    }
+    
+  });
+} else {
+  sizeDropdown.style.display = 'none';
+}
+
+
+      // Show/hide arrows
+      const prev = document.getElementById('imgPrev');
+      const next = document.getElementById('imgNext');
+      const showArrows = gallery.length > 1;
+      prev.style.display = showArrows ? '' : 'none';
+      next.style.display = showArrows ? '' : 'none';
+
+      // ---- SOLD OUT BUTTON HANDLING ----
+const addBtn = document.getElementById('addToCart');
+const checkoutBtn = document.getElementById('checkout');
+
+// Find total inventory (sum of variant quantities)
+let totalQty = 0;
+if (product.variants?.edges?.length) {
+  product.variants.edges.forEach(v => {
+    const node = v.node;
+    // if you have inventoryQuantity available from Shopify Storefront API, use it here
+    if (node.availableForSale === false) {
+      totalQty += 0;
+    } else {
+      totalQty += 1; // treat available variants as in-stock
+    }
+  });
+}
+
+if (totalQty === 0) {
+  addBtn.textContent = 'SOLD OUT';
+  addBtn.disabled = true;
+  addBtn.style.cursor = 'not-allowed';
+  addBtn.style.opacity = '1';
+  addBtn.style.backgroundColor = '#ddd';
+  addBtn.style.color = '#999';
+
+  // Hide checkout when ALL variants are gone
+  checkoutBtn.style.display = 'none';
+} else {
+  // Make sure checkout is visible when there is stock somewhere
+  checkoutBtn.style.display = '';
+}
+
+
+      
+    }
+
+    function showImage(i) {
+      if (!gallery.length) return;
+      galleryIndex = (i + gallery.length) % gallery.length;
+      const img = gallery[galleryIndex];
+      const el = document.getElementById('pdp-image');
+      el.src = img.url;
+      el.alt = img.alt || '';
+    }
+
+function getVariantForSelection() {
+  if (!product || !product.variants?.edges?.length) return null;
+
+  const wanted = Object.entries(selected); // e.g., [['Color','Gold'],['Size','M']]
+  // exact match on all selected options
+  for (const e of product.variants.edges) {
+    const v = e.node;
+    const opts = v.selectedOptions || [];
+    const match = wanted.every(([n, val]) =>
+      opts.some(o => o.name.toLowerCase() === n.toLowerCase() && o.value === val)
+    );
+    if (match) return v;
+  }
+  return null;
+}
+
+function findSelectedVariantId() {
+  const v = getVariantForSelection();
+  if (v) return v.id;
+  // fallback: first available
+  const avail = product?.variants?.edges?.find(e => e.node.availableForSale);
+  return avail?.node?.id || product?.variants?.edges?.[0]?.node?.id || null;
+}
+
+function updateAvailabilityUI() {
+  const addBtn = document.getElementById('addToCart');
+  const checkoutBtn = document.getElementById('checkout');
+
+  const v = getVariantForSelection();
+
+  // Default: enabled
+  const enable = v && v.availableForSale === true;
+
+if (enable) {
+  addBtn.innerHTML = 'CART <span class="cart-plus">+</span>';
+  addBtn.disabled = false;
+  addBtn.style.cursor = 'pointer';
+  addBtn.style.opacity = '1';
+  addBtn.style.backgroundColor = 'white';
+  addBtn.style.color = '#BD9B46';
+
+  // show checkout
+  checkoutBtn.style.display = '';
+  checkoutBtn.disabled = false;
+  checkoutBtn.style.cursor = 'pointer';
+  checkoutBtn.style.opacity = '1';
+  checkoutBtn.style.backgroundColor = 'white';
+  checkoutBtn.style.color = '#BD9B46';
+} else {
+  addBtn.textContent = 'SOLD OUT';
+  addBtn.disabled = true;
+  addBtn.style.cursor = 'not-allowed';
+  addBtn.style.opacity = '1';
+  addBtn.style.backgroundColor = '#ddd';
+  addBtn.style.color = '#999';
+
+  // hide checkout for an unavailable size
+  checkoutBtn.style.display = 'none';
+}
+
+}
+
+
+
+    async function ensureCart() {
+      if (cartId) return cartId;
+      const d = await sf(CART_CREATE, { lines: [] });
+      cartId = d.cartCreate.cart.id;
+      localStorage.setItem('cartId', cartId);
+      return cartId;
+    }
+
+    async function addSelectionToCart() {
+      const variantId = findSelectedVariantId();
+      if (!variantId) { alert('This variant is unavailable.'); return null; }
+      const id = await ensureCart();
+      const d = await sf(CART_LINES_ADD, {
+        cartId: id,
+        lines: [{ merchandiseId: variantId, quantity: 1 }]
+      });
+      return d.cartLinesAdd.cart.checkoutUrl;
+    }
+
+    async function getCart() {
+  if (!cartId) return null;
+  const data = await sf(CART_QUERY, { id: cartId });
+  return data?.cart || null;
+}
+
+function formatMoney(amount, currency) {
+  if (amount == null) return '';
+  const n = Math.round(Number(amount));
+  return `$${n}${currency || 'MXN'}`;
+}
+
+async function removeCartLine(lineId) {
+  if (!cartId) return;
+  try {
+    await sf(CART_LINES_REMOVE, { cartId, lineIds: [lineId] });
+    renderCartIntoModal(); // refresh the modal
+  } catch (err) {
+    console.error("Error removing line:", err);
+  }
+}
+
+/* Renders the cart inside your existing modal “Cart” tab */
+async function renderCartIntoModal() {
+  const cart = await getCart();
+  const area = document.getElementById('modal-content');
+  if (!area) return;
+
+  if (!cart || cart.totalQuantity === 0) {
+    area.innerHTML = `<p>Your cart is currently empty.</p>`;
+    return;
+  }
+
+  const lines = cart.lines?.edges || [];
+  const itemsHTML = lines.map(e => {
+    const ln = e.node;
+    const m  = ln.merchandise;
+    return `
+      <div class="cart-line" data-lineid="${ln.id}">
+        <img src="${m.image?.url || ''}" alt="${m.image?.altText || ''}">
+        <div class="cart-line-info">
+          <div class="cart-title">${m.product?.title || ''}</div>
+          <div class="cart-variant">${m.title || ''}</div>
+          <div class="cart-qty-price">Qty: ${ln.quantity} · ${formatMoney(m.price?.amount, m.price?.currencyCode)}</div>
+        </div>
+        <button class="cart-remove" data-lineid="${ln.id}">×</button>
+      </div>
+    `;
+  }).join('');
+
+  area.innerHTML = `
+    <div class="cart-lines">${itemsHTML}</div>
+    <div class="cart-summary">
+      <div>Subtotal: <strong>${formatMoney(cart.cost?.subtotalAmount?.amount, cart.cost?.subtotalAmount?.currencyCode)}</strong></div>
+      <a class="cart-checkout-btn" href="${cart.checkoutUrl}">Go to Checkout</a>
+    </div>
+  `;
+
+  // wire up remove buttons *after* we render the HTML
+  area.querySelectorAll('.cart-remove').forEach(btn => {
+    btn.addEventListener('click', () => removeCartLine(btn.dataset.lineid));
+  });
+}
+
+
+function openCartModal() {
+  showModal();
+  showTab('cart');
+  renderCartIntoModal();
+}
+
+
+    async function initPDP() {
+      try {
+        const handle = getParam('handle');
+        if (!handle) { alert('Missing ?handle='); location.href = 'index.html'; return; }
+
+        const data = await sf(PRODUCT_BY_HANDLE, { handle });
+        if (!data?.product) { alert('Product not found'); location.href = 'index.html'; return; }
+        product = data.product;
+
+        renderPDP();
+
+        // Gallery controls
+        document.getElementById('imgPrev').onclick = () => showImage(galleryIndex - 1);
+        document.getElementById('imgNext').onclick = () => showImage(galleryIndex + 1);
+        // keyboard support
+        window.addEventListener('keydown', (e)=>{
+          if (gallery.length < 2) return;
+          if (e.key === 'ArrowLeft')  showImage(galleryIndex - 1);
+          if (e.key === 'ArrowRight') showImage(galleryIndex + 1);
+        });
+
+        // Buttons
+document.getElementById('addToCart').onclick = async () => {
+  const url = await addSelectionToCart();
+
+  // Animate button
+  const btn = document.getElementById('addToCart');
+  btn.textContent = 'ADDED ✓';
+  setTimeout(() => (btn.innerHTML = 'CART <span class="cart-plus">+</span>'), 800);
+
+  // Immediately show updated cart modal
+  openCartModal();
+    // if Cart tab is visible right now, refresh it
+  const cartTabActive = [...document.querySelectorAll('.modal-tab')].some(t =>
+    t.textContent.toLowerCase() === 'cart' &&
+    (t.style.borderBottomColor === 'rgb(189, 155, 70)' || t.style.borderBottomColor === '#BD9B46')
+  );
+  if (cartTabActive) renderCartIntoModal();
+};
+
+        document.getElementById('checkout').onclick = async () => {
+          const url = await addSelectionToCart();
+          if (url) location.href = url; // go to Shopify secure checkout
+        };
+      } catch (err) {
+        console.error(err);
+        alert('There was a problem loading this product.');
+        location.href = 'index.html';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', initPDP);
+    
+    // remove persistent highlight on image navigation buttons
+document.querySelectorAll('.img-nav').forEach(btn => {
+  btn.addEventListener('mouseup', () => btn.blur());
+  btn.addEventListener('touchend', () => btn.blur());
+});
+
+  </script>
+</body>
+</html>

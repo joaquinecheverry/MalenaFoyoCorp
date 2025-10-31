@@ -9,17 +9,20 @@ body {
 }
 
 .background-text {
-    position: fixed;    
-    text-align: center;         
-    left: 50%;               
-    transform: translate(-49%, 0%);
-    font-family: ballet;         
-    color: #BD9B46;  
-    pointer-events: none;    
-    z-index: -10;      
-    font-size: 220pt;     
-    width: 100vw;   
+  position: fixed;
+  text-align: center;
+  left: 50%;
+  transform: translate(-49%, 0%);
+  font-family: ballet;
+  color: #BD9B46;
+  pointer-events: none;
+  z-index: -10;
+  font-size: 220pt;
+  width: 100vw;
+  /* keep it one line */
+      /* match homepage spacing */
 }
+
 
 #nav {
     display: flex;
@@ -118,21 +121,6 @@ body {
     max-height: auto;
 }
 
-.product-info {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    text-align: center;
-    color: white;
-    font-size: 12pt;
-    font-family: Arial, Helvetica, sans-serif;
-    margin: 10px;
-    height: 53px;
-    line-height: 1.3;
-    transition: all 0.3s;
-    cursor: default;
-}
 
 
 p {
@@ -144,3 +132,48 @@ p:hover {
     color: #E55DB8;
 }
 
+/* centered star between products with extra breathing room */
+.star--between{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin:50px 0;      /* space above/below the star */
+  line-height:1;
+}
+.star--between span{
+  display:inline-block;
+  font-size:20px;     /* adjust if you want it bigger/smaller */
+  color:white;
+  transition:color .3s;
+}
+.star--between span:hover{ color:#BD9B46; }
+
+/* keep these – they apply ONLY to the home page cards */
+.page-home .product .photodiv { position: relative; }
+.page-home .product .photodiv > .product-info {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  text-align: center;
+  color: white;
+  font-size: 12pt;
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 20px;
+  height: 53px;
+  line-height: 1.3;
+  transition: all 0.3s;
+  cursor: default;
+}
+
+/* Hide product info overlay until hover */
+.page-home .product .photodiv > .product-info {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none; /* prevent accidental hover on text */
+}
+
+/* Reveal name and price only when hovering over the image */
+.page-home .product .photodiv:hover > .product-info {
+  opacity: 1;
+  pointer-events: auto;
+}
