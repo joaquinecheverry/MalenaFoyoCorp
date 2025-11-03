@@ -6,6 +6,7 @@ body {
     background: url("printprint.jpeg") no-repeat center center fixed;
     background-size: cover;
     font-family: Arial, Helvetica, sans-serif;
+    cursor: url('cursor1_imresizer.png'), auto;
 }
 
 .background-text {
