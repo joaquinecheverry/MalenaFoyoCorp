@@ -155,6 +155,44 @@
     const kRestitution = 0.98;
     let navHeight = 0;
 
+    function showImage(i) {
+      if (!gallery.length) return;
+      
+      const newIndex = (i + gallery.length) % gallery.length;
+      const direction = newIndex > galleryIndex ? 1 : -1; // 1 = right, -1 = left
+      const oldIndex = galleryIndex;
+      galleryIndex = newIndex;
+      
+      const img = gallery[galleryIndex];
+      const el = document.getElementById('pdp-image');
+      
+      // Only animate if we're actually changing images
+      if (oldIndex !== galleryIndex) {
+        // Slide out current image
+        el.style.transition = 'transform 0.4s ease-in-out, opacity 0.4s ease-in-out';
+        el.style.transform = `translateX(${direction * -100}%)`;
+        el.style.opacity = '0';
+        
+        // After slide out, swap image and slide in
+        setTimeout(() => {
+          el.src = img.url;
+          el.alt = img.alt || '';
+          el.style.transition = 'none';
+          el.style.transform = `translateX(${direction * 100}%)`;
+          
+          // Force reflow to ensure the transform applies before animating back
+          el.offsetHeight;
+          
+          el.style.transition = 'transform 0.4s ease-in-out, opacity 0.4s ease-in-out';
+          el.style.transform = 'translateX(0)';
+          el.style.opacity = '1';
+        }, 400);
+      } else {
+        el.src = img.url;
+        el.alt = img.alt || '';
+      }
+    }
+    
     function setup() {
       const navElement = document.getElementById('nav');
       navHeight = navElement ? navElement.offsetHeight : 50;
