@@ -25,6 +25,7 @@ body {
   z-index: -10;
   font-size: 220pt;
   width: 100vw;
+    cursor: url('cursor1_imresizer.png'), auto;
   /* keep it one line */
       /* match homepage spacing */
 }
@@ -43,6 +44,7 @@ body {
     color: #BD9B46;
     font-size: 18pt;
     position: fixed;
+    cursor: url('cursor1_imresizer.png'), auto;
     width: 100vw;
     box-sizing: border-box;
     top: 0;
@@ -53,6 +55,7 @@ body {
     width: 1280px;
     height: 832px;
     position: relative;    margin: 0 auto;
+    cursor: url('cursor1_imresizer.png'), auto;
 }
 
 /* Header Styles */
@@ -65,6 +68,7 @@ body {
     background: white;
     display: flex;
     align-items: center;
+    cursor: url('cursor1_imresizer.png'), auto;
     justify-content: space-between;
     padding: 0 11px;
     z-index: 10;
@@ -72,22 +76,26 @@ body {
 
 .location, .brand-name, .year {
     font-size: 18pt;
+    cursor: url('cursor1_imresizer.png'), auto;
     color: #BD9B46;
 }
 
 .brand-name {
     text-align: center;
+    cursor: url('cursor1_imresizer.png'), auto;
     flex: 1;
 }
 
 .year {
     text-align: right;
+    cursor: url('cursor1_imresizer.png'), auto;
 }
 
 /* Product Section */
 .product-section {
     position: absolute;
     top: 135px;
+    cursor: url('cursor1_imresizer.png'), auto;
     left: 29px;
     display: flex;
     gap: 196px;
@@ -96,28 +104,32 @@ body {
 /* Product Image */
 .product-image {
     position: relative;
+    cursor: url('cursor1_imresizer.png'), auto;
 }
 
 p:hover {
     color: #E55DB8;
     cursor: default;
+    cursor: url('cursor1_imresizer.png'), auto;
 }
 
 .dress-image {
     width: 457px;
     height: auto;
     border: 8px white solid;
+    cursor: url('cursor1_imresizer.png'), auto;
     transition: border 0.1s;
     display: block;
 }
 
 .dress-image:hover {
     border: 8px #BD9B46 solid;
-    cursor: pointer;
+cursor: url('cursor2_imresizer.png'), auto;
 }
 /* Product Details */
 .product-details {
     position: relative;
+    cursor: url('cursor1_imresizer.png'), auto;
     width: 609px;
 }
 .star1 {
@@ -137,11 +149,13 @@ p:hover {
 .product-info {
     padding: 8px 0px;
     margin-bottom: 64px;
+    cursor: url('cursor1_imresizer.png'), auto;
 }
 
 .product-name {
     font-size: 18pt;
 background-color: white;
+    cursor: url('cursor1_imresizer.png'), auto;
 margin-bottom: 10px;
 padding: 7px;
 }
@@ -149,12 +163,14 @@ padding: 7px;
 .product-material {
     font-size: 18pt;
     margin-bottom: 10px;
+    cursor: url('cursor1_imresizer.png'), auto;
     padding: 7px;
     background-color: white;
 }
 
 .product-origin {
     font-size: 18pt;
+    cursor: url('cursor1_imresizer.png'), auto;
     background-color: white;
     margin-bottom: 10px;
     padding: 7px;
@@ -165,6 +181,7 @@ padding: 7px;
     display: flex;
     align-items: center;
     gap: 9px;
+    cursor: url('cursor2_imresizer.png'), auto;
     margin-bottom: 175px;
     width: 184px;
 }
@@ -173,6 +190,7 @@ padding: 7px;
     background: white;
     padding: 7px 10px;
     font-size: 18pt;
+    cursor: url('cursor2_imresizer.png'), auto;
     line-height: 1.4;
     display: inline-block;
     width: auto; /* dynamically fits text */
@@ -184,6 +202,7 @@ padding: 7px;
     background-color: white;
     top: 80px;
     font-size: 18pt;
+    cursor: url('cursor2_imresizer.png'), auto;
     color: #BD9B46;
     margin-left: 125px;
     width: 70px;
@@ -210,6 +229,7 @@ padding: 7px;
   position: absolute;
   left: 0;              /* <-- align with title/color */
   right: auto;
+    cursor: url('cursor2_imresizer.png'), auto;
   top: 560px;           /* keep your existing vertical placement */
   display: flex;
   gap: 10px;
@@ -220,10 +240,10 @@ padding: 7px;
     border: none;
     font-size: 18pt;
     color: #BD9B46;
-    cursor: pointer;
     transition: color 0.2s;
     transition: background-color 0.2s;
     display: flex;
+    cursor: url('cursor2_imresizer.png'), auto;
     align-items: center;
     justify-content: center;
     padding: 7px;
@@ -232,6 +252,7 @@ padding: 7px;
 
 .cart-btn {
     gap: 29px;
+    cursor: url('cursor2_imresizer.png'), auto;
 }
 
 
@@ -242,6 +263,7 @@ color: white;
 
 .cart-plus {
     font-size: 18pt;
+    cursor: url('cursor2_imresizer.png'), auto;
 }
 
 /* Responsive Design */
@@ -357,8 +379,8 @@ border: none;
   align-items: center;
   justify-content: center;
   font-size: 18pt;
-  cursor: pointer;
-  transition: color .2s, background-color .2s, transform .2s;
+cursor: url('cursor2_imresizer.png'), auto;
+    transition: color .2s, background-color .2s, transform .2s;
 }
 
 /* rotate only when NOT selected */
@@ -406,8 +428,8 @@ border: none;
   display: flex;
   align-items: center;
   justify-content: center; /* centers “XS / S / M …” */
-  cursor: pointer;
-  transition: background-color .15s, color .15s;
+cursor: url('cursor2_imresizer.png'), auto;
+    transition: background-color .15s, color .15s;
 }
 .size-option:hover{ background:#E55DB8; color:#fff; }
 .size-option.active{ background:#E55DB8; color:#fff; }
@@ -493,8 +515,8 @@ border: none;
   border: none;
   font-size: 22px;
   color: #BD9B46;
-  cursor: pointer;
-  transition: color 0.2s;
+cursor: url('cursor2_imresizer.png'), auto;
+    transition: color 0.2s;
 }
 
 .cart-remove:hover {
