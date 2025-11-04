@@ -8,9 +8,7 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
-nav, #maincolumn {
-    cursor: url('cursor1_imresizer.png'), auto;
-}
+
 
 .background-text {
   position: fixed;
@@ -23,8 +21,8 @@ nav, #maincolumn {
   z-index: -10;
   font-size: 220pt;
   width: 100vw;
-  /* keep it one line */
-      /* match homepage spacing */
+  cursor: url('cursor1_imresizer.png'), auto;
+/* match homepage spacing */
 }
 
 
@@ -39,6 +37,7 @@ nav, #maincolumn {
     color: #BD9B46;
     font-size: 18pt;
     position: fixed;
+    cursor: url('cursor1_imresizer.png'), auto;
     width: 100vw;
     box-sizing: border-box;
     top: 0;
@@ -58,6 +57,7 @@ nav, #maincolumn {
     font-size: 20px;
     transition: color 0.3s;
     cursor: default;
+    cursor: url('cursor2_imresizer.png'), auto;
 }  
 
 .star:hover {
@@ -82,6 +82,7 @@ nav, #maincolumn {
     align-items: center;
     justify-content: flex-start;
     width: 100%;
+    cursor: url('cursor1_imresizer.png'), auto;
     margin-top: 5vh; 
 }
 
@@ -91,6 +92,7 @@ nav, #maincolumn {
     transition: border 0.1s;
     max-height: auto;
     display: block;
+    cursor: url('cursor2_imresizer.png'), auto;
     line-height: 0;
     position: relative; 
 }
@@ -102,6 +104,7 @@ nav, #maincolumn {
 .photodiv img {
     display: block;     
     width: 100%;       
+    cursor: url('cursor2_imresizer.png'), auto;
     height: auto;
     vertical-align: top;
 }
@@ -119,6 +122,7 @@ nav, #maincolumn {
     flex-direction: column;
     align-items: center;
     gap: 50px; 
+    cursor: url('cursor2_imresizer.png'), auto;
     margin-top: 50px;
     padding-bottom: 50px;
     max-width: 480px;
