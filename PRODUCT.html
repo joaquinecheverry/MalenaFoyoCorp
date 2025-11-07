@@ -525,13 +525,17 @@ query ProductByHandle($handle: String!) {
         }
       }
     `;
-    const CART_LINES_ADD = `
-      mutation CartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
-        cartLinesAdd(cartId: $cartId, lines: $lines) {
-          cart { id checkoutUrl }
-        }
+const CART_LINES_ADD = `
+  mutation CartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
+    cartLinesAdd(cartId: $cartId, lines: $lines) {
+      cart {
+        id
+        checkoutUrl
+        totalQuantity
       }
-    `;
+    }
+  }
+`;
 
     const CART_LINES_REMOVE = `
   mutation CartLinesRemove($cartId: ID!, $lineIds: [ID!]!) {
@@ -581,6 +585,18 @@ query ProductByHandle($handle: String!) {
     let product = null;
     let selected = {};
     let cartId = localStorage.getItem('cartId') || null;
+    // keep track of cart quantity and control the button label in ONE place
+let currentCartTotal = 0;
+
+function updateCartButtonQuantity(qty) {
+  currentCartTotal = qty;
+  const btn = document.getElementById('addToCart');
+  if (!btn) return;
+
+  const suffix = qty > 0 ? ` (${qty})` : '';
+  // always use this template: CART + (N)
+  btn.innerHTML = `CART <span class="cart-plus">+</span>${suffix}`;
+}
 
     // gallery state
     let gallery = [];
@@ -761,7 +777,9 @@ function updateAvailabilityUI() {
   const enable = v && v.availableForSale === true;
 
 if (enable) {
-  addBtn.innerHTML = 'CART <span class="cart-plus">+</span>';
+  // restore normal Cart label with whatever quantity we already have
+  updateCartButtonQuantity(currentCartTotal);
+
   addBtn.disabled = false;
   addBtn.style.cursor = 'pointer';
   addBtn.style.opacity = '1';
@@ -787,6 +805,7 @@ if (enable) {
   checkoutBtn.style.display = 'none';
 }
 
+
 }
 
 
@@ -799,16 +818,27 @@ if (enable) {
       return cartId;
     }
 
-    async function addSelectionToCart() {
-      const variantId = findSelectedVariantId();
-      if (!variantId) { alert('This variant is unavailable.'); return null; }
-      const id = await ensureCart();
-      const d = await sf(CART_LINES_ADD, {
-        cartId: id,
-        lines: [{ merchandiseId: variantId, quantity: 1 }]
-      });
-      return d.cartLinesAdd.cart.checkoutUrl;
-    }
+async function addSelectionToCart() {
+  const variantId = findSelectedVariantId();
+  if (!variantId) { 
+    alert('This variant is unavailable.'); 
+    return null; 
+  }
+
+  const id = await ensureCart();
+  const d = await sf(CART_LINES_ADD, {
+    cartId: id,
+    lines: [{ merchandiseId: variantId, quantity: 1 }]
+  });
+
+  const cart = d.cartLinesAdd.cart;
+  // 🔴 this keeps the number on the button in sync with Shopify’s cart
+  updateCartButtonQuantity(cart.totalQuantity || 0);
+
+  return cart.checkoutUrl;
+}
+
+
 
     async function getCart() {
   if (!cartId) return null;
@@ -821,6 +851,8 @@ function formatMoney(amount, currency) {
   const n = Math.round(Number(amount));
   return `$${n}${currency || 'MXN'}`;
 }
+
+
 
 async function removeCartLine(lineId) {
   if (!cartId) return;
@@ -838,10 +870,15 @@ async function renderCartIntoModal() {
   const area = document.getElementById('modal-content');
   if (!area) return;
 
-  if (!cart || cart.totalQuantity === 0) {
-    area.innerHTML = `<p>Your cart is currently empty.</p>`;
-    return;
+const addBtn = document.getElementById('addToCart');
+
+if (!cart || cart.totalQuantity === 0) {
+  area.innerHTML = `<p>Your cart is currently empty.</p>`;
+  if (addBtn && !addBtn.disabled) {
+    updateCartButtonQuantity(0);   // reset PDP button only if not sold out
   }
+  return;
+}
 
   const lines = cart.lines?.edges || [];
   const itemsHTML = lines.map(e => {
@@ -867,6 +904,11 @@ async function renderCartIntoModal() {
       <a class="cart-checkout-btn" href="${cart.checkoutUrl}">Go to Checkout</a>
     </div>
   `;
+
+
+if (addBtn && !addBtn.disabled) {
+  updateCartButtonQuantity(cart.totalQuantity || 0);
+}
 
   // wire up remove buttons *after* we render the HTML
   area.querySelectorAll('.cart-remove').forEach(btn => {
@@ -905,16 +947,19 @@ function openCartModal() {
 
         // Buttons
 document.getElementById('addToCart').onclick = async () => {
-  const url = await addSelectionToCart();
-
-  // Animate button
+  const checkoutUrl = await addSelectionToCart();
   const btn = document.getElementById('addToCart');
-  btn.textContent = 'ADDED ✓';
-  setTimeout(() => (btn.innerHTML = 'CART <span class="cart-plus">+</span>'), 800);
 
-  // Immediately show updated cart modal
+  // just a little visual flash instead of changing the text
+  btn.classList.add('just-added');
+  setTimeout(() => btn.classList.remove('just-added'), 600);
+
+
+
+  // show updated cart modal
   openCartModal();
-    // if Cart tab is visible right now, refresh it
+
+  // if Cart tab is already active, refresh it
   const cartTabActive = [...document.querySelectorAll('.modal-tab')].some(t =>
     t.textContent.toLowerCase() === 'cart' &&
     (t.style.borderBottomColor === 'rgb(189, 155, 70)' || t.style.borderBottomColor === '#BD9B46')
@@ -922,10 +967,21 @@ document.getElementById('addToCart').onclick = async () => {
   if (cartTabActive) renderCartIntoModal();
 };
 
-        document.getElementById('checkout').onclick = async () => {
-          const url = await addSelectionToCart();
-          if (url) location.href = url; // go to Shopify secure checkout
-        };
+
+document.getElementById('checkout').onclick = async () => {
+  const cart = await addSelectionToCart();
+  if (cart && cart.checkoutUrl) {
+    location.href = cart.checkoutUrl; // go to Shopify secure checkout
+  }
+};
+const existingCart = await getCart();
+if (existingCart) {
+  const addBtn = document.getElementById('addToCart');
+  // Only update the label if this product is *not* globally SOLD OUT
+  if (addBtn && !addBtn.disabled) {
+    updateCartButtonQuantity(existingCart.totalQuantity || 0);
+  }
+}
       } catch (err) {
         console.error(err);
         alert('There was a problem loading this product.');

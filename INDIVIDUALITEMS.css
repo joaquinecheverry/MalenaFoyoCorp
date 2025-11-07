@@ -579,3 +579,7 @@ cursor: url('cursor2_imresizer.png'), auto;
 }
 .page-product a.back:hover{ background:#E55DB8; color:#fff; }
 
+.cart-btn.just-added {
+  background-color: #BD9B46;
+  color: white;
+}
