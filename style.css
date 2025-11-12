@@ -27,9 +27,9 @@ body {
 
 
 #nav {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
     align-items: center;     
-    justify-content: space-between;
     height: 5vh;
     padding: 0 10px;
     font-family: sans-serif;
@@ -51,7 +51,6 @@ body {
 #place { text-align: left; }
 #name  { text-align: center; }
 #year  { text-align: right; }
-
 .star {
     color: white;
     font-size: 20px;
