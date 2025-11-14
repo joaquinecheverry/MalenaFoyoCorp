@@ -447,7 +447,7 @@ const SHOPIFY_DOMAIN = 'malenafoyo.myshopify.com';
 const SHOPIFY_API_VERSION = '2024-10';
 const SHOPIFY_STOREFRONT_TOKEN = 'b237e2ac75f2a4fd0e9af68435e45e20';
 
-// 👇 set this to the collection's HANDLE (not title)
+//  set this to the collection's HANDLE (not title)
 const COLLECTION_HANDLE = 'malena-foyo'; // make sure this matches your Shopify collection handle
 
 async function shopifyGraphQL(query, variables = {}) {
