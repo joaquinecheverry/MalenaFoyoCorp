@@ -1,3 +1,4 @@
+// ================== p5 stars + modal ==================
 const stars = [];
 const kRestitution = 0.98;
 let navHeight = 0;
@@ -437,3 +438,136 @@ function showTab(tabName) {
     }
   }
 }
+
+
+// ================== Shopify Storefront (homepage products) ==================
+
+// Fill these:
+const SHOPIFY_DOMAIN = 'malenafoyo.myshopify.com';
+const SHOPIFY_API_VERSION = '2024-10';
+const SHOPIFY_STOREFRONT_TOKEN = 'b237e2ac75f2a4fd0e9af68435e45e20';
+
+// 👇 set this to the collection's HANDLE (not title)
+const COLLECTION_HANDLE = 'malena-foyo'; // make sure this matches your Shopify collection handle
+
+async function shopifyGraphQL(query, variables = {}) {
+  const url = `https://${SHOPIFY_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Shopify-Storefront-Access-Token': SHOPIFY_STOREFRONT_TOKEN
+    },
+    body: JSON.stringify({ query, variables })
+  });
+
+  const text = await res.text();
+  if (!res.ok) {
+    console.error('HTTP error', res.status, text);
+    throw new Error(`HTTP ${res.status}`);
+  }
+  const json = JSON.parse(text);
+  if (json.errors) {
+    console.error('GraphQL errors:', json.errors);
+    throw new Error('GraphQL error');
+  }
+  return json.data;
+}
+
+// Pull products from a specific collection, keeping the collection's manual order
+const COLLECTION_PRODUCTS_QUERY = `
+  query CollectionProducts($handle: String!, $first: Int = 50) {
+    collectionByHandle(handle: $handle) {
+      id
+      title
+      products(first: $first, sortKey: MANUAL) {
+        edges {
+          node {
+            handle
+            title
+            featuredImage { url altText }
+            priceRange { minVariantPrice { amount currencyCode } }
+          }
+        }
+      }
+    }
+  }
+`;
+
+// "$2900MXN" formatting (no space)
+function moneyNoSpace(amount, currency) {
+  if (!amount) return '';
+  const n = Math.round(Number(amount));
+  const cur = currency || 'MXN';
+  return `$${n}${cur}`;
+}
+
+// Renders your column list with centered stars between items
+function renderProductsLinear(nodes) {
+  const list = document.getElementById('productsList');
+  if (!list) return;
+  list.innerHTML = '';
+
+  nodes.forEach((p, idx) => {
+    const block = document.createElement('div');
+
+    const item = document.createElement('div');
+    item.className = 'photodiv';
+
+    const img = document.createElement('img');
+    img.src = p.featuredImage?.url || '';
+    img.alt = p.featuredImage?.altText || p.title;
+
+    const info = document.createElement('div');
+    info.className = 'product-info card-info';
+    const price = p.priceRange?.minVariantPrice;
+    info.innerHTML = `${p.title}<br>${moneyNoSpace(price?.amount, price?.currencyCode)}`;
+
+    item.addEventListener('click', () => {
+      location.href = 'PRODUCT.html?handle=' + encodeURIComponent(p.handle);
+    });
+
+    item.appendChild(img);
+    item.appendChild(info);
+    block.appendChild(item);
+    list.appendChild(block);
+
+    if (idx < nodes.length - 1) {
+      const starRow = document.createElement('div');
+      starRow.className = 'star--between';
+      starRow.innerHTML = '<span>★</span>';
+      list.appendChild(starRow);
+    }
+  });
+
+  if (!nodes.length) {
+    list.innerHTML = '<div style="background:#fff;padding:8px;">No products found in this collection.</div>';
+  }
+}
+
+async function loadProducts() {
+  const list = document.getElementById('productsList');
+  if (!list) return; // only run on homepage
+
+  try {
+    const data = await shopifyGraphQL(COLLECTION_PRODUCTS_QUERY, {
+      handle: COLLECTION_HANDLE,
+      first: 50
+    });
+
+    if (!data?.collectionByHandle) {
+      console.warn('Collection not found. Check COLLECTION_HANDLE.');
+      list.innerHTML = '<div style="background:#fff;padding:8px;">Collection not found.</div>';
+      return;
+    }
+
+    const nodes = (data.collectionByHandle.products?.edges || []).map(e => e.node);
+    renderProductsLinear(nodes);
+  } catch (err) {
+    console.error('Failed to load collection products:', err);
+    list.innerHTML = '<p style="background:white;padding:7px;">Failed to load products.</p>';
+  }
+}
+
+// run product loading for homepage once DOM is ready
+window.addEventListener('DOMContentLoaded', loadProducts);
