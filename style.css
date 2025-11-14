@@ -3,33 +3,10 @@
 body {
     margin: 0;
     padding: 0;
+    background: url("printprint.jpeg") no-repeat center center fixed;
+    background-size: cover;
     font-family: Arial, Helvetica, sans-serif;
-    color: #BD9B46;
 }
-
-
-
-/* Shared full-screen background image layer */
-.bg-image {
-  position: fixed;
-  inset: 0; /* top:0; right:0; bottom:0; left:0 */
-  background-image: url("printprint.jpeg");
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  z-index: -2;
-  pointer-events: none;
-  image-rendering: auto;
-}
-
-/* iOS/mobile tweaks: don't try to fake parallax with attachment:fixed */
-@media (max-width: 900px) {
-  .bg-image {
-    background-attachment: scroll;
-  }
-}
-
-
 
 
 
@@ -47,7 +24,6 @@ body {
   cursor: url('cursor1_imresizer.png'), auto;
 /* match homepage spacing */
 }
-
 
 
 #nav {
@@ -209,3 +185,30 @@ p:hover {
   pointer-events: auto;
 }
 
+@media (max-width: 768px) {
+    body {
+        background-attachment: scroll; /* 'fixed' can cause issues on mobile */
+        background-size: contain; /* or try 'auto' to prevent scaling */
+        background-repeat: repeat; /* if using contain/auto */
+    }
+    
+    /* Make images bigger on mobile */
+    #maincolumn {
+        max-width: 90vw; /* Use more screen width */
+        gap: 40px;
+        margin-top: 30px;
+    }
+    
+    /* Bigger stars between products */
+    .star--between span {
+        font-size: 40px; /* Double the size */
+    }
+    
+    .star1 {
+        font-size: 40px; /* Bigger leading star */
+    }
+    
+    .star {
+        font-size: 40px; /* Bigger trailing star */
+    }
+}
