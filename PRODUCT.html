@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>Malena Foyo Site</title>
+
 <link rel="stylesheet" href="INDIVIDUALITEMS.css?v=5">
 
 <link href="https://fonts.googleapis.com/css2?family=Ballet:opsz@16..72&display=swap" rel="stylesheet">
@@ -85,11 +86,11 @@
   </style>
 </head>
 <body class="page-product">
-  <div id="nav">
-    <p id="place">CDMX</p>
-    <p id="name">MALENA FOYO</p>
-    <p id="year">2025</p>
-  </div>
+<div id="nav">
+  <p id="place">ABOUT</p>
+  <p id="name">MALENA FOYO</p>
+  <p id="year">CONTACT</p>
+</div>
   <div class="background-text">Golden Dreams</div>
   <div class="star1">★</div>
 
@@ -445,6 +446,26 @@ function showTab(tabName){
       t.style.color='#BD9B46'; t.style.borderBottomColor='#BD9B46';
     } else { t.style.color='#666'; t.style.borderBottomColor='transparent'; }
   });
+document.addEventListener('DOMContentLoaded', () => {
+  const aboutLink = document.getElementById('place');   // ABOUT
+  const contactLink = document.getElementById('year');  // CONTACT
+
+  if (aboutLink) {
+    aboutLink.style.cursor = 'pointer';
+    aboutLink.addEventListener('click', () => {
+      showModal();
+      showTab('about');
+    });
+  }
+
+  if (contactLink) {
+    contactLink.style.cursor = 'pointer';
+    contactLink.addEventListener('click', () => {
+      showModal();
+      showTab('contact');
+    });
+  }
+});
 
   const area = document.getElementById('modal-content');
   if (!area) return;
@@ -462,6 +483,26 @@ function showTab(tabName){
   }
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    const aboutNav = document.getElementById('place');
+    const contactNav = document.getElementById('year');
+
+    if (aboutNav) {
+      aboutNav.style.cursor = 'pointer';
+      aboutNav.addEventListener('click', () => {
+        showModal();
+        showTab('about');
+      });
+    }
+
+    if (contactNav) {
+      contactNav.style.cursor = 'pointer';
+      contactNav.addEventListener('click', () => {
+        showModal();
+        showTab('contact');
+      });
+    }
+  });
 
     /* ================= Shopify PDP (live data + gallery) ================= */
     const SHOPIFY_DOMAIN = 'malenafoyo.myshopify.com';

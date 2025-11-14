@@ -14,29 +14,10 @@ body {
     overflow-x: hidden;
 }
 
-.background-text {
-  position: fixed;
-  text-align: center;
-  left: 50%;
-  transform: translate(-49%, 0%);
-  font-family: ballet;
-  color: #BD9B46;
-  pointer-events: none;
-  z-index: -10;
-  font-size: 220pt;
-  width: 100vw;
-    cursor: url('cursor1_imresizer.png'), auto;
-  /* keep it one line */
-      /* match homepage spacing */
-}
-
-
-
-
 #nav {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
     align-items: center;     
-    justify-content: space-between;
     height: 5vh;
     padding: 0 10px;
     font-family: sans-serif;
@@ -50,6 +31,18 @@ body {
     top: 0;
     z-index: 100;
 }
+
+#nav p {
+    margin: 0;
+}
+
+#place { text-align: left; }
+#name  { text-align: center; }
+#year  { text-align: right; }
+
+
+
+
 
 .container {
     width: 1280px;
@@ -195,6 +188,20 @@ padding: 7px;
     display: inline-block;
     width: auto; /* dynamically fits text */
     white-space: nowrap;
+}
+.background-text {
+  position: fixed;
+  text-align: center;
+  left: 50%;
+  transform: translate(-49%, 0%);
+  font-family: ballet;
+  color: #BD9B46;
+  pointer-events: none;
+  z-index: -10;
+  font-size: 220pt;
+  width: 100vw;
+  cursor: url('cursor1_imresizer.png'), auto;
+/* match homepage spacing */
 }
 
 .back {
