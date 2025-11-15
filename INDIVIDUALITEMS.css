@@ -1,35 +1,29 @@
-/* Reset and Base Styles */
-* {
+body {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Geist', Arial, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   color: #BD9B46;
-  background: url("printprint.jpeg") no-repeat center center;
-
-  overflow-x: hidden;
-
+  min-height: 100vh;    /* important so content can fill the screen */
 }
+
 
 #nav {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  align-items: center;     
-  height: 5vh;
+  align-items: center;
+  height: 52px;
   padding: 0 10px;
   font-family: sans-serif;
-  background-color: white;
+  background-color: #ffffff;   /* white bar */
   color: #BD9B46;
   font-size: 18pt;
   position: fixed;
-  cursor: url('cursor1_imresizer.png'), auto;
+  top: 0;
+  left: 0;
+  right: 0;
   width: 100vw;
   box-sizing: border-box;
-  top: 0;
-  z-index: 100;
+  z-index: 10;                 /* above background-text */
 }
 
 #nav p {
@@ -41,12 +35,13 @@ body {
 #year  { text-align: right; }
 
 .container {
-  width: 1280px;
-  height: 832px;
-  position: relative;
+  max-width: 1280px;
   margin: 0 auto;
+  padding: 120px 20px 40px;   /* space below the fixed nav */
+  box-sizing: border-box;
   cursor: url('cursor1_imresizer.png'), auto;
 }
+
 
 /* Header Styles */
 .header {
@@ -81,15 +76,12 @@ body {
   cursor: url('cursor1_imresizer.png'), auto;
 }
 
-/* Product Section */
 .product-section {
-  position: absolute;
-  top: 135px;
-  cursor: url('cursor1_imresizer.png'), auto;
   display: flex;
   gap: 196px;
+  align-items: flex-start;
+  margin-top: 0;           /* padding on .container already handles spacing */
 }
-
 /* Product Image */
 .product-image {
   position: relative;
@@ -192,12 +184,12 @@ p:hover {
   position: fixed;
   text-align: center;
   left: 50%;
-  transform: translate(-49%, 0%);
-  font-family: ballet;
+  transform: translate(-49%, 10%);
+  font-family: 'Ballet';
   color: #BD9B46;
   pointer-events: none;
-  z-index: -10;
-  font-size: 220pt;
+  z-index: -1;              /* above bg-image, below content */
+  font-size: 120pt;
   width: 100vw;
   cursor: url('cursor1_imresizer.png'), auto;
 }
@@ -302,10 +294,29 @@ p:hover {
 
 @media (max-width: 768px) {
   /* Scale down background text */
-  .background-text {
-      font-size: 100pt;
-  }
-  
+
+  .img-nav {
+  position: absolute;
+  bottom: 40px; /* move to bottom */
+  top: auto; /* remove top alignment */
+  transform: translateY(0);
+  background: none; /* remove any box */
+  color: white;
+  border: none;
+  font-size: 2.2rem;
+  cursor: pointer;
+  z-index: 2;
+}
+.img-nav.prev{  left: 25px; }
+.img-nav.next{ right: 25px; }
+
+  .container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0px 20px 40px;   /* space below the fixed nav */
+  box-sizing: border-box;
+  cursor: url('cursor1_imresizer.png'), auto;
+}
   /* Nav adjustments */
   #nav {
       width: 100%;
@@ -325,7 +336,7 @@ p:hover {
   
   /* Product section spacing */
   .product-section {
-      padding: 120px 15px 30px;
+      padding: 80px 15px 30px;
       gap: 25px;
   }
   
@@ -387,8 +398,8 @@ p:hover {
   
   /* Star adjustments */
   .star1 {
-      font-size: 16px;
-      margin-top: 40px;
+      font-size: 20px;
+      margin-top: 85px;
   }
   
   /* Action buttons */
@@ -447,9 +458,7 @@ p:hover {
 
 /* Smaller mobile phones */
 @media (max-width: 480px) {
-  .background-text {
-      font-size: 60pt;
-  }
+
   
   #nav {
       font-size: 10pt;
@@ -699,4 +708,36 @@ p:hover {
 .cart-btn.just-added {
   background-color: #BD9B46;
   color: white;
+}
+
+.bg-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url("printprint.jpeg");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: -2;              /* behind everything */
+  pointer-events: none;
+  image-rendering: auto;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+@media (max-width: 900px) {
+  .bg-image {
+    height: 100vh;       
+    width: 100vw;        
+    background-size: cover; /* Keep it filling screen */
+    background-attachment: scroll; /* iOS-safe */
+  }
+}
+
+/* Make sure the product content is on top too */
+.page-product .main-content {
+  position: relative;
+  z-index: 1;
 }
