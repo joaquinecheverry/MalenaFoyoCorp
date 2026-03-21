@@ -295,6 +295,11 @@ p:hover {
 @media (max-width: 768px) {
   /* Scale down background text */
 
+  /* bg-image is position:fixed so it always covers the full viewport while scrolling */
+  .bg-image {
+    display: block;
+  }
+
   .img-nav {
   position: absolute;
   bottom: 40px; /* move to bottom */
@@ -313,7 +318,7 @@ p:hover {
   .container {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0px 20px 40px;   /* space below the fixed nav */
+  padding: 70px 20px 40px;   /* top pushes content below fixed nav */
   box-sizing: border-box;
   cursor: url('cursor1_imresizer.png'), auto;
 }
@@ -324,20 +329,39 @@ p:hover {
       height: 6vh;
       padding: 0 8px;
   }
-  
+
   .header {
       height: auto;
       padding: 8px;
   }
-  
+
   .location, .brand-name, .year {
       font-size: 14pt;
   }
-  
-  /* Product section spacing */
+
+  /* Stack image above text on mobile */
   .product-section {
-      padding: 80px 15px 30px;
-      gap: 25px;
+      flex-direction: column !important;
+      flex-wrap: nowrap !important;
+      padding: 50px 15px 30px;
+      gap: 20px;
+  }
+
+  .product-left {
+      max-width: 100% !important;
+      flex: none !important;
+      width: 100%;
+  }
+
+  .product-image.photodiv {
+      max-width: 100% !important;
+      flex: none !important;
+      width: 100%;
+  }
+
+  .product-details {
+      width: 100% !important;
+      position: relative !important;
   }
   
   /* Make everything smaller */

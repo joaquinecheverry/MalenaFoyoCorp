@@ -673,6 +673,13 @@ document.getElementById('pdp-origin').textContent = `Made in ${madeIn}`;
       galleryIndex = 0;
       showImage(0);
 
+      // Preload all gallery images so arrow clicks are instant
+      gallery.forEach((img, i) => {
+        if (i === 0) return; // first image already loading via showImage(0)
+        const pre = new Image();
+        pre.src = img.url;
+      });
+
       // Static color display
       const colorOpt = product.options?.find(o => /color/i.test(o.name));
       const colorRow = document.getElementById('colorRow');
