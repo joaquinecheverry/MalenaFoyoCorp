@@ -10,12 +10,20 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   color: #BD9B46;
 
-  /* BACKGROUND MOVED HERE */
-  background-image: url("printprint.jpeg");
-  background-position: center center fixed;
+  /* Mobile: small optimized image */
+  background-color: #c8a96e; /* fallback color while image loads */
+  background-image: url(“printprint_mobile.jpeg”);
+  background-position: center center;
   background-repeat: no-repeat;
-  background-size: cover;   /* always fill the screen */
-  background-attachment: scroll;  /* <- important: NO “fixed” (that’s what causes pixelation on phones) */
+  background-size: cover;
+  background-attachment: scroll;
+}
+
+/* Desktop: full-res optimized image */
+@media (min-width: 769px) {
+  body {
+    background-image: url(“printprint_desktop.jpeg”);
+  }
 }
 
 

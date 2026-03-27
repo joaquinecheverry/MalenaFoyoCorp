@@ -740,7 +740,8 @@ p:hover {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-image: url("printprint.jpeg");
+  background-color: #c8a96e; /* fallback color while image loads */
+  background-image: url("printprint_mobile.jpeg");
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -749,6 +750,12 @@ p:hover {
   image-rendering: auto;
   transform: translateZ(0);
   will-change: transform;
+}
+
+@media (min-width: 769px) {
+  .bg-image {
+    background-image: url("printprint_desktop.jpeg");
+  }
 }
 
 @media (max-width: 900px) {
