@@ -305,7 +305,7 @@
     }
 
     function checkPhotoCollisions(star, radius){
-      const blocks = document.querySelectorAll('.photodiv');
+      const blocks = document.querySelectorAll('.photodiv, .back');
       blocks.forEach(el => {
         const r = el.getBoundingClientRect();
         const left=r.left, right=r.right, top=r.top, bottom=r.bottom;
