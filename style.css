@@ -16,7 +16,6 @@ body {
 @media (max-width: 768px) {
   body {
     background-image: url('printprint_mobile.jpeg');
-    background-attachment: scroll;
   }
 }
 
