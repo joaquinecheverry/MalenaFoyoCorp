@@ -9,19 +9,29 @@ body {
   padding: 0;
   font-family: Arial, Helvetica, sans-serif;
   color: #BD9B46;
-
-  /* Mobile: small optimized image */
   background-color: #c8a96e; /* fallback color while image loads */
+}
+
+/* GPU-accelerated background div — same approach as the product page */
+.bg-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #c8a96e;
   background-image: url(“printprint_mobile.jpeg”);
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
-  background-attachment: scroll;
+  z-index: -2;
+  pointer-events: none;
+  transform: translateZ(0);
+  will-change: transform;
 }
 
-/* Desktop: full-res optimized image */
 @media (min-width: 769px) {
-  body {
+  .bg-image {
     background-image: url(“printprint_desktop.jpeg”);
   }
 }
