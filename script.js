@@ -427,18 +427,98 @@ function showTab(tabName) {
         `;
         break;
       case 'cart':
-        contentArea.innerHTML = `
-          <p>Your cart is currently empty.</p>
-          <p>Browse our collection and add items to see them here. We'll keep track of your selections and make checkout simple and secure.</p>
-          <div style="background: #f9f9f9; border-radius: 5px;">
-            <p style="margin: 0; color: #666; font-style: italic;">Items you add will appear here with pricing and quantity options.</p>
-          </div>
-        `;
+        contentArea.innerHTML = '<p>Loading…</p>';
+        renderCartIntoModal();
         break;
     }
   }
 }
 
+
+// ================== Cart (homepage) ==================
+
+const CART_QUERY_HOME = `
+  query GetCart($id: ID!) {
+    cart(id: $id) {
+      id
+      checkoutUrl
+      totalQuantity
+      cost {
+        subtotalAmount { amount currencyCode }
+      }
+      lines(first: 50) {
+        edges {
+          node {
+            id
+            quantity
+            merchandise {
+              ... on ProductVariant {
+                id
+                title
+                image { url altText }
+                product { title }
+                price { amount currencyCode }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+async function renderCartIntoModal() {
+  const cartId = localStorage.getItem('cartId');
+  const area = document.getElementById('modal-content');
+  if (!area) return;
+
+  if (!cartId) {
+    area.innerHTML = '<p>Your cart is currently empty.</p>';
+    return;
+  }
+
+  try {
+    const data = await shopifyGraphQL(CART_QUERY_HOME, { id: cartId });
+    const cart = data?.cart;
+
+    if (!cart || cart.totalQuantity === 0) {
+      area.innerHTML = '<p>Your cart is currently empty.</p>';
+      return;
+    }
+
+    const itemsHTML = cart.lines.edges.map(e => {
+      const ln = e.node;
+      const m = ln.merchandise;
+      const price = Math.round(Number(m.price?.amount));
+      const currency = m.price?.currencyCode || 'MXN';
+      return `
+        <div class="cart-line" data-lineid="${ln.id}">
+          <img src="${m.image?.url || ''}" alt="${m.image?.altText || ''}">
+          <div class="cart-line-info">
+            <div class="cart-title">${m.product?.title || ''}</div>
+            <div class="cart-variant">${m.title || ''}</div>
+            <div class="cart-qty-price">Qty: ${ln.quantity} · $${price}${currency}</div>
+          </div>
+          <button class="cart-remove" data-lineid="${ln.id}">×</button>
+        </div>
+      `;
+    }).join('');
+
+    const subtotal = Math.round(Number(cart.cost?.subtotalAmount?.amount));
+    const currency = cart.cost?.subtotalAmount?.currencyCode || 'MXN';
+
+    area.innerHTML = `
+      <div class="cart-lines">${itemsHTML}</div>
+      <div class="cart-summary">
+        <div>Subtotal: <strong>$${subtotal}${currency}</strong></div>
+        <a class="cart-checkout-btn" href="${cart.checkoutUrl}">Go to Checkout</a>
+      </div>
+    `;
+  } catch (err) {
+    console.error('Failed to load cart:', err);
+    area.innerHTML = '<p>Could not load cart.</p>';
+  }
+}
 
 // ================== Shopify Storefront (homepage products) ==================
 
