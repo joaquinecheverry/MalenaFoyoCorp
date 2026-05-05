@@ -97,14 +97,14 @@ p:hover {
 .dress-image {
   width: 457px;
   height: auto;
-  border: 8px white solid;
+  /* border: 8px white solid; */
   cursor: url('cursor1_imresizer.png'), auto;
   transition: border 0.1s;
   display: block;
 }
 
 .dress-image:hover {
-  border: 8px #BD9B46 solid;
+  /* border: 8px #BD9B46 solid; */
   cursor: url('cursor2_imresizer.png'), auto;
 }
 
