@@ -121,7 +121,7 @@ function checkHover() {
   }
   
   if (anyStarHovered) {
-    document.body.style.cursor = "url('cursor2_imresizer.png'), auto";
+    document.body.style.cursor = "url('cursor2_imresizer.png') 16 16, auto";
   } else {
     document.body.style.cursor = 'default';
   }
