@@ -96,7 +96,13 @@ function checkHover() {
   const mousePos = { x: mouseX, y: mouseY };
   
   for (const star of stars) {
-    const distance = dist(mousePos.x, mousePos.y, star.position.x, star.position.y);
+    const distance = dist(
+      mousePos.x,
+      mousePos.y,
+      star.position.x,
+      star.position.y
+    );
+
     const wasHovered = star.isHovered;
     
     star.isHovered = distance < star.size / 2;
@@ -108,23 +114,24 @@ function checkHover() {
     if (star.isHovered && !wasHovered) {
       star.frozenVelocity.x = star.velocity.x;
       star.frozenVelocity.y = star.velocity.y;
+
       star.velocity.x = 0;
       star.velocity.y = 0;
-      star.targetSize = star.baseSize * 1.3; 
+
+      star.targetSize = star.baseSize * 1.3;
     }
     
     if (!star.isHovered && wasHovered) {
       star.velocity.x = star.frozenVelocity.x;
       star.velocity.y = star.frozenVelocity.y;
-      star.targetSize = star.baseSize; 
+
+      star.targetSize = star.baseSize;
     }
   }
-  
-  if (anyStarHovered) {
-    document.body.style.cursor = "url('cursor2_imresizer.png') 16 16, auto";
-  } else {
-    document.body.style.cursor = 'default';
-  }
+
+  document.body.style.cursor = anyStarHovered
+    ? "url('cursor2_imresizer.png') 16 16, auto"
+    : "url('cursor1_imresizer.png') 16 16, auto";
 }
 
 function updateStarSize(star) {

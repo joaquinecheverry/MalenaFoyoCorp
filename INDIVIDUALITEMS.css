@@ -3,7 +3,7 @@ body {
   padding: 0;
   font-family: Arial, Helvetica, sans-serif;
   color: #BD9B46;
-  min-height: 100vh;    /* important so content can fill the screen */
+  min-height: 100vh;
 }
 
 
@@ -11,7 +11,7 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   align-items: center;
-  height: 52px;
+  height: 5vh;
   padding: 0 10px;
   font-family: sans-serif;
   background-color: #ffffff;   /* white bar */
@@ -23,7 +23,8 @@ body {
   right: 0;
   width: 100vw;
   box-sizing: border-box;
-  z-index: 10;                 /* above background-text */
+  z-index: 10;
+  cursor: url('cursor1_imresizer.png') 16 16, auto;
 }
 
 #nav p {
@@ -39,7 +40,7 @@ body {
   margin: 0 auto;
   padding: 120px 20px 40px;   /* space below the fixed nav */
   box-sizing: border-box;
-  cursor: url('cursor1_imresizer.png'), auto;
+  cursor: url('cursor1_imresizer.png') 16 16, auto;
 }
 
 
@@ -53,7 +54,7 @@ body {
   background: white;
   display: flex;
   align-items: center;
-  cursor: url('cursor1_imresizer.png'), auto;
+  cursor: url('cursor1_imresizer.png') 16 16, auto;
   justify-content: space-between;
   padding: 0 11px;
   z-index: 10;
@@ -61,19 +62,19 @@ body {
 
 .location, .brand-name, .year {
   font-size: 18pt;
-  cursor: url('cursor1_imresizer.png'), auto;
+  cursor: url('cursor1_imresizer.png') 16 16, auto;
   color: #BD9B46;
 }
 
 .brand-name {
   text-align: center;
-  cursor: url('cursor1_imresizer.png'), auto;
+  cursor: url('cursor1_imresizer.png') 16 16, auto; 
   flex: 1;
 }
 
 .year {
   text-align: right;
-  cursor: url('cursor1_imresizer.png'), auto;
+  cursor: url('cursor1_imresizer.png') 16 16, auto;
 }
 
 .product-section {
@@ -85,33 +86,33 @@ body {
 /* Product Image */
 .product-image {
   position: relative;
-  cursor: url('cursor1_imresizer.png'), auto;
+  cursor: url('cursor1_imresizer.png') 16 16, auto;
 }
 
 p:hover {
   color: #E55DB8;
   cursor: default;
-  cursor: url('cursor1_imresizer.png'), auto;
+  cursor: url('cursor2_imresizer.png') 16 16, auto !important;
 }
 
 .dress-image {
   width: 457px;
   height: auto;
-  /* border: 8px white solid; */
-  cursor: url('cursor1_imresizer.png'), auto;
+  border: 4px white solid;
+  cursor: url('cursor1_imresizer.png') 16 16, auto;
   transition: border 0.1s;
   display: block;
 }
 
 .dress-image:hover {
-  /* border: 8px #BD9B46 solid; */
-  cursor: url('cursor2_imresizer.png'), auto;
+  border: 4px #BD9B46 solid;
+  cursor: url('cursor2_imresizer.png') 16 16, auto;
 }
 
 /* Product Details */
 .product-details {
   position: relative;
-  cursor: url('cursor1_imresizer.png'), auto;
+  cursor: url('cursor1_imresizer.png') 16 16, auto;
   width: 609px;
 }
 
@@ -127,18 +128,19 @@ p:hover {
 
 .star1:hover {
   color:#BD9B46 !important;
+  cursor: url('cursor2_imresizer.png') 16 16, auto !important;
 }
 
 .product-info {
   padding: 8px 0px;
   margin-bottom: 64px;
-  cursor: url('cursor1_imresizer.png'), auto;
+  cursor: url('cursor1_imresizer.png') 16 16, auto;
 }
 
 .product-name {
   font-size: 18pt;
   background-color: white;
-  cursor: url('cursor1_imresizer.png'), auto;
+  cursor: url('cursor2_imresizer.png') 16 16, auto;
   margin-bottom: 10px;
   padding: 7px;
 }
@@ -146,14 +148,14 @@ p:hover {
 .product-material {
   font-size: 18pt;
   margin-bottom: 10px;
-  cursor: url('cursor1_imresizer.png'), auto;
+  cursor: url('cursor1_imresizer.png') 16 16, auto;
   padding: 7px;
   background-color: white;
 }
 
 .product-origin {
   font-size: 18pt;
-  cursor: url('cursor1_imresizer.png'), auto;
+  cursor: url('cursor1_imresizer.png') 16 16, auto;
   background-color: white;
   margin-bottom: 10px;
   padding: 7px;
@@ -164,7 +166,7 @@ p:hover {
   display: flex;
   align-items: center;
   gap: 9px;
-  cursor: url('cursor2_imresizer.png'), auto;
+  cursor: url('cursor2_imresizer.png') 16 16, auto;
   margin-bottom: 175px;
   width: 184px;
 }
@@ -173,7 +175,7 @@ p:hover {
   background: white;
   padding: 7px 10px;
   font-size: 18pt;
-  cursor: url('cursor2_imresizer.png'), auto;
+  cursor: url('cursor2_imresizer.png') 16 16, auto;
   line-height: 1.4;
   display: inline-block;
   width: auto;
@@ -191,7 +193,7 @@ p:hover {
   z-index: -1;              /* above bg-image, below content */
   font-size: 120pt;
   width: 100vw;
-  cursor: url('cursor1_imresizer.png'), auto;
+  cursor: url('cursor1_imresizer.png') 16 16, auto;
 }
 
 .back {
@@ -199,7 +201,7 @@ p:hover {
   background-color: white;
   top: 80px;
   font-size: 18pt;
-  cursor: url('cursor2_imresizer.png'), auto;
+  cursor: url('cursor2_imresizer.png') 16 16, auto;
   color: #BD9B46;
   margin-left: 125px;
   width: 70px;
@@ -210,10 +212,10 @@ p:hover {
 
 .back:hover {
   position: absolute;
-  background-color: #E55DB8;
+  background-color: white;
   top: 80px;
   font-size: 18pt;
-  color: white;
+  color: #E55DB8;
   margin-left: 125px;
   width: 70px;
   z-index: 20;
@@ -224,7 +226,7 @@ p:hover {
   position: absolute;
   left: 0;
   right: auto;
-  cursor: url('cursor2_imresizer.png'), auto;
+  cursor: url('cursor2_imresizer.png') 16 16, auto;
   top: 260px;
   display: flex;
   gap: 10px;
@@ -239,7 +241,7 @@ p:hover {
   transition: color 0.2s;
   transition: background-color 0.2s;
   display: flex;
-  cursor: url('cursor2_imresizer.png'), auto;
+  cursor: url('cursor2_imresizer.png') 16 16, auto;
   align-items: center;
   justify-content: center;
   padding: px;
@@ -247,7 +249,7 @@ p:hover {
 
 .cart-btn {
   gap: 29px;
-  cursor: url('cursor2_imresizer.png'), auto;
+  cursor: url('cursor2_imresizer.png') 16 16, auto;
 }
 
 .cart-btn:hover, .checkout-btn:hover {
@@ -257,7 +259,7 @@ p:hover {
 
 .cart-plus {
   font-size: 18pt;
-  cursor: url('cursor2_imresizer.png'), auto;
+  cursor: url('cursor2_imresizer.png') 16 16, auto;
 }
 
 /* Responsive Design */
@@ -292,6 +294,10 @@ p:hover {
   }
 }
 
+.img-nav{
+  cursor: url('cursor2_imresizer.png') 16 16, auto !important;
+}
+
 @media (max-width: 768px) {
   /* Scale down background text */
 
@@ -309,8 +315,8 @@ p:hover {
   color: white;
   border: none;
   font-size: 2.2rem;
-  cursor: pointer;
   z-index: 2;
+   cursor: url('cursor2_imresizer.png') 16 16, auto !important;
 }
 .img-nav.prev{  left: 25px; }
 .img-nav.next{ right: 25px; }
@@ -320,7 +326,7 @@ p:hover {
   margin: 0 auto;
   padding: 70px 20px 40px;   /* top pushes content below fixed nav */
   box-sizing: border-box;
-  cursor: url('cursor1_imresizer.png'), auto;
+   cursor: url('cursor2_imresizer.png') 16 16, auto !important;
 }
   /* Nav adjustments */
   #nav {
@@ -527,7 +533,7 @@ p:hover {
   align-items: center;
   justify-content: center;
   font-size: 18pt;
-  cursor: url('cursor2_imresizer.png'), auto;
+  cursor: url('cursor2_imresizer.png') 16 16, auto;
   transition: color .2s, background-color .2s, transform .2s;
 }
 
@@ -571,7 +577,7 @@ p:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: url('cursor2_imresizer.png'), auto;
+  cursor: url('cursor2_imresizer.png') 16 16, auto;
   transition: background-color .15s, color .15s;
 }
 
@@ -655,7 +661,8 @@ p:hover {
 }
 
 .cart-checkout-btn:hover {
-  filter: brightness(0.95);
+  background: #BD9B46;
+  color: #fff !important;
 }
 
 .cart-remove {
@@ -663,7 +670,7 @@ p:hover {
   border: none;
   font-size: 22px;
   color: #BD9B46;
-  cursor: url('cursor2_imresizer.png'), auto;
+  cursor: url('cursor2_imresizer.png') 16 16, auto;
   transition: color 0.2s;
 }
 
@@ -704,8 +711,8 @@ p:hover {
 }
 
 .page-product .product-image .back:hover {
-  background: #E55DB8;
-  color: #fff;
+  background: #ffffff;
+  color: #E55DB8;
 }
 
 .page-product .product-left { 
@@ -751,6 +758,17 @@ p:hover {
   transform: translateZ(0);
   will-change: transform;
 }
+
+a {
+  color: #BD9B46;
+  text-decoration: none;
+}
+
+a:hover { 
+  color: #E55DB8 !important; 
+  cursor: url('cursor2_imresizer.png') 16 16, auto !important;
+}
+
 
 @media (min-width: 769px) {
   .bg-image {

@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Ballet:opsz@16..72&display=swap');
 
+
 body {
   margin: 0;
   padding: 0;
@@ -32,12 +33,6 @@ body {
 
 
 
-
-
-
-
-
-
 .background-text {
   position: fixed;
   text-align: center;
@@ -49,7 +44,7 @@ body {
   z-index: -1;
   font-size: 220pt;
   width: 100vw;
-  cursor: url('cursor1_imresizer.png'), auto;
+  cursor: url('cursor1_imresizer.png') 16 16, auto;
 /* match homepage spacing */
 }
 
@@ -67,7 +62,6 @@ body {
     color: #BD9B46;
     font-size: 18pt;
     position: fixed;
-    cursor: url('cursor1_imresizer.png'), auto;
     width: 100vw;
     box-sizing: border-box;
     top: 0;
@@ -86,7 +80,7 @@ body {
     font-size: 20px;
     transition: color 0.3s;
     cursor: default;
-    cursor: url('cursor2_imresizer.png'), auto;
+    cursor: url('cursor2_imresizer.png') 16 16, auto;
 }  
 
 .star:hover {
@@ -96,13 +90,12 @@ body {
 .star1:hover {
     color: #BD9B46;
     transition: color 0.3s;
-    cursor: default;
+      cursor: url('cursor2_imresizer.png') 16 16, auto !important;
 }
 
 .star1 {
     color: white;
     font-size: 20px;
-    cursor: url('cursor2_imresizer.png'), auto;
     margin-top: 35px;
 }  
 
@@ -121,19 +114,19 @@ body {
     transition: border 0.1s;
     max-height: auto;
     display: block;
-    cursor: url('cursor2_imresizer.png'), auto;
     line-height: 0;
     position: relative; 
 }
 
 .photodiv:hover {
     border: #BD9B46 4px solid !important; 
+    cursor: url('cursor2_imresizer.png') 16 16, auto !important;
 }
 
 .photodiv img {
     display: block;     
     width: 100%;       
-    cursor: url('cursor2_imresizer.png'), auto;
+    cursor: url('cursor2_imresizer.png') 16 16, auto;
     height: auto;
     vertical-align: top;
 }
@@ -166,6 +159,7 @@ p {
 
 p:hover {
     color: #E55DB8;
+    cursor: url('cursor2_imresizer.png') 16 16, auto !important;
 }
 
 /* centered star between products with extra breathing room */
@@ -173,7 +167,7 @@ p:hover {
   width:100%;
   display:flex;
   justify-content:center;
-    cursor: url('cursor2_imresizer.png'), auto;
+        cursor: url('cursor2_imresizer.png') 16 16, auto;
   align-items:center;
   margin:50px 0;      /* space above/below the star */
   line-height:1;
@@ -213,6 +207,8 @@ p:hover {
 .page-home .product .photodiv:hover > .product-info {
   opacity: 1;
   pointer-events: auto;
+    cursor: url('cursor2_imresizer.png') 16 16, auto !important;
+
 }
 
 /* ---------- Mobile scaling tweaks ---------- */
@@ -242,6 +238,11 @@ p:hover {
   }
 }
 
+#star-modal{
+
+  cursor: url('cursor2_imresizer.png') 16 16, auto !important;
+
+}
 
 @media (max-width: 600px) {
   #star-modal {
@@ -315,6 +316,18 @@ p:hover {
 }
 
 .cart-remove:hover { color: #E55DB8; }
+
+a {
+  color: #BD9B46;
+  text-decoration: none;
+}
+
+a:hover { 
+  color: #E55DB8 !important; 
+  cursor: url('cursor2_imresizer.png') 16 16, auto !important;
+}
+
+
 
 @media (max-width: 768px) {
   .cart-lines { padding: 8px; gap: 8px; margin-top: 12px; }

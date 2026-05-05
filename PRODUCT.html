@@ -92,7 +92,7 @@
     <div class="bg-image"></div>
 <div id="nav">
   <p id="place">ABOUT</p>
-  <p id="name">MALENA FOYO</p>
+  <p id="name"><a href="../">MALENA FOYO</a></p>
   <p id="year">CONTACT</p>
 </div>
   <div class="background-text">Golden Dreams</div>
@@ -400,7 +400,8 @@
       modal.style.cssText = `
         position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
         z-index: 1000; display: none; justify-content: flex-start; align-items: center;
-        padding-left: 20px; box-sizing: border-box;`;
+        padding-left: 20px; box-sizing: border-box; cursor: url('cursor1_imresizer.png') 16 16, auto;
+`;
 
       const content = document.createElement('div');
       content.style.cssText = `
@@ -412,7 +413,7 @@
       closeBtn.style.cssText = `
         position: absolute; top: 10px; right: 15px; background: none; border: none;
         font-size: 30px; cursor: pointer; color: #BD9B46; width: 30px; height: 30px;
-        display: flex; align-items: center; justify-content: center;`;
+        display: flex; align-items: center; justify-content: center;  cursor: url('cursor2_imresizer.png') 16 16, auto;`;
       closeBtn.onclick = hideModal;
 
       const nav = document.createElement('div');
@@ -424,7 +425,7 @@
         b.className = 'modal-tab';
         b.style.cssText = `
           background:none; border:none; padding:0; font-size:18pt; cursor:pointer;
-          border-bottom:3px solid transparent; color:#BD9B46; transition:all .1s;`;
+          border-bottom:3px solid transparent; color:#BD9B46; transition:all .1s;   cursor: url('cursor2_imresizer.png') 16 16, auto;`;
         b.onclick = () => showTab(name.toLowerCase());
         nav.appendChild(b);
       });
