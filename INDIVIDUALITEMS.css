@@ -164,11 +164,11 @@ p:hover {
 /* Color Selector */
 .color-selector {
   display: flex;
-  align-items: center;
-  gap: 9px;
+  flex-direction: column;
+  gap: 15px;
   cursor: url('cursor2_imresizer.png') 16 16, auto;
   margin-bottom: 175px;
-  width: 184px;
+  width: 100%;
 }
 
 .color-label {
@@ -436,7 +436,6 @@ p:hover {
   .action-buttons {
       position: relative !important;
       top: auto !important;
-      margin-top: 20px;
       flex-direction: column;
       gap: 10px;
       width: 100%;
@@ -502,9 +501,25 @@ p:hover {
       font-size: 12pt;
   }
   
-  .color-label, .size-trigger, .cart-btn, .checkout-btn {
+  .color-label, .size-trigger, .cart-btn, .checkout-btn{
       font-size: 12pt;
   }
+}
+
+.size-selector {
+   display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.size-title {
+  background-color: #fff;
+  color: #BD9B46;
+  font-size: 18pt;
+  padding: 7px 10px;
+  cursor: url('cursor2_imresizer.png') 16 16, auto;
+  line-height: 1.4;
+  display: inline-block;
 }
 
 .selector-row {
@@ -512,6 +527,12 @@ p:hover {
   align-items: center;
   gap: 10px;
   margin-bottom: 24px;
+}
+
+.size-strip {
+  display: flex;
+  background-color: #fff;
+  align-items: center;
 }
 
 /* Size selector */
@@ -572,8 +593,8 @@ p:hover {
   border: none;
   color: #BD9B46;
   font-size: 16pt;
-  height: 44px;
-  width: 100%;
+  width: 44px;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -789,4 +810,19 @@ a:hover {
 .page-product .main-content {
   position: relative;
   z-index: 1;
+}
+
+@media screen and (max-width: 768px) {
+
+  .size-title,
+  .size-option {
+    font-size: 12pt;
+  }
+  .product-info{
+    margin-bottom: 0px;
+  }
+  .color-selector {
+    margin-bottom: 40px;
+  }
+
 }

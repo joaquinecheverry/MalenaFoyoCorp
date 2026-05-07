@@ -129,15 +129,18 @@
 
           <!-- Static color (no picker) -->
           <div class="color-selector photodiv" id="colorRow" style="display:none;">
-            <span class="color-label" id="colorLabel">Color: —</span>
+            <span class="color-label" id="colorLabel">COLOR: —</span>
+
+          
               <!-- Size Drawer Trigger -->
-  <div class="size-dropdown" id="sizeDropdown">
-    <button class="size-trigger" id="sizeTrigger">></button>
-    <div class="size-drawer" id="sizeDrawer"></div>
-  </div>
+  <div class="size-selector photodiv" id="sizeRow" style="display:none;">
+  <div class="size-title">SIZE:</div>
+
+  <div class="size-strip" id="sizeStrip"></div>
+</div>
 </div>
 
-          <!-- Size selector -->
+         
 <div class="size-selector photodiv" id="sizeRow" style="display:none;">
   <span class="size-label" id="sizeLabel">Size: —</span>
   <button class="size-arrow" id="sizeNext" aria-label="View next size">&gt;</button>
@@ -690,56 +693,49 @@ document.getElementById('pdp-origin').textContent = `Made in ${madeIn}`;
       const colorLabel = document.getElementById('colorLabel');
       if (colorOpt && colorOpt.values?.length) {
         colorRow.style.display = '';
-        colorLabel.textContent = `Color: ${colorOpt.values[0]}`;
+        colorLabel.textContent = `COLOR: ${colorOpt.values[0]}`;
         selected[colorOpt.name] = colorOpt.values[0];
       } else {
         colorRow.style.display = 'none';
       }
-const sizeOpt      = product.options.find(o => /size/i.test(o.name));
-const sizeDropdown = document.getElementById('sizeDropdown');
-const sizeTrigger  = document.getElementById('sizeTrigger');
-const sizeDrawer   = document.getElementById('sizeDrawer');
+const sizeOpt   = product.options.find(o => /size/i.test(o.name));
+const sizeRow   = document.getElementById('sizeRow');
+const sizeStrip = document.getElementById('sizeStrip');
 
 if (sizeOpt && sizeOpt.values?.length) {
-  sizeTrigger.textContent = '>';           // start as arrow
-  sizeTrigger.classList.remove('selected');
 
-  sizeDrawer.innerHTML = '';
+  sizeRow.style.display = '';
+
+  sizeStrip.innerHTML = '';
+
   sizeOpt.values.forEach(val => {
+
     const btn = document.createElement('button');
+
     btn.className = 'size-option';
     btn.textContent = val;
+
     btn.onclick = () => {
+
+      // store Shopify selection
       selected[sizeOpt.name] = val;
-      sizeTrigger.textContent = val;       // show chosen letters
-      sizeTrigger.classList.add('selected');
-      sizeTrigger.classList.remove('open');
-      [...sizeDrawer.children].forEach(b =>
+
+      // active visual state
+      [...sizeStrip.children].forEach(b =>
         b.classList.toggle('active', b.textContent === val)
       );
-      sizeDrawer.style.display = 'none';
+
+      // update availability / sold out state
       updateAvailabilityUI();
     };
-    sizeDrawer.appendChild(btn);
+
+    sizeStrip.appendChild(btn);
   });
 
-  sizeTrigger.onclick = (e) => {
-    e.stopPropagation();
-    const willOpen = sizeDrawer.style.display !== 'block';
-    sizeDrawer.style.display = willOpen ? 'block' : 'none';
-    // only show “open” rotation when not selected
-    sizeTrigger.classList.toggle('open', willOpen && !sizeTrigger.classList.contains('selected'));
-  };
-
-  document.addEventListener('click', (e) => {
-    if (!sizeDropdown.contains(e.target)) {
-      sizeDrawer.style.display = 'none';
-      sizeTrigger.classList.remove('open');
-    }
-    
-  });
 } else {
-  sizeDropdown.style.display = 'none';
+
+  sizeRow.style.display = 'none';
+
 }
 
 
