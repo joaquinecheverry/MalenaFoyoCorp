@@ -249,12 +249,13 @@ p:hover {
 
 .cart-btn {
   gap: 29px;
-  cursor: url('cursor2_imresizer.png') 16 16, auto;
+  cursor: url('cursor1_imresizer.png') 16 16, auto !important;
 }
 
 .cart-btn:hover, .checkout-btn:hover {
   background-color: #E55DB8;
   color: white;
+  cursor: url('cursor2_imresizer.png') 16 16, auto !important;
 }
 
 .cart-plus {
