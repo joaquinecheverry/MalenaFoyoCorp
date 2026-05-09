@@ -410,11 +410,12 @@ p:hover {
   }
   
   .back:hover {
-      font-size: 14pt;
+      font-size: 12pt;
       padding: 5px;
       width: 60px;
       top: 60px;
       margin-left: 15px;
+      
   }
   
   /* Dress image */
@@ -751,6 +752,8 @@ p:hover {
   padding: 8px;
   line-height: 1;
   z-index: 5;
+  width: fit-content;
+
 }
 
 .page-product a.back:hover{ 
@@ -826,4 +829,148 @@ a:hover {
     margin-bottom: 40px;
   }
 
+}
+
+
+.modal-tab {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 18pt;
+  cursor: url('cursor2_imresizer.png') 16 16, auto !important;
+
+  border-bottom: 3px solid transparent;
+
+  color: #BD9B46;
+
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease,
+    opacity 0.15s ease;
+}
+
+/* hover */
+.modal-tab:hover {
+  opacity: 0.6;
+  border-bottom-color: #BD9B46;
+}
+
+/* active tab */
+.modal-tab.active {
+  color: #BD9B46;
+  border-bottom-color: #BD9B46;
+  opacity: 1;
+}
+
+.star-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 95vw;
+  height: 100vh;
+
+  z-index: 1000;
+
+  display: none;
+
+  justify-content: flex-start;
+  align-items: center;
+
+  padding-left: 20px;
+
+  box-sizing: border-box;
+
+  cursor: url('cursor1_imresizer.png') 16 16, auto;
+}
+
+.star-modal-content {
+  background: white;
+
+  padding: 10px;
+
+  max-width: 900px;
+  width: 100%;
+
+  position: relative;
+
+  color: #BD9B46;
+
+  font-size: 18pt;
+}
+
+.star-modal-close {
+  position: absolute;
+
+  top: 10px;
+  right: 15px;
+
+  width: 30px;
+  height: 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: none;
+  border: none;
+
+  font-size: 30px;
+
+  color: #BD9B46;
+
+  cursor: url('cursor2_imresizer.png') 16 16, auto;
+
+  transition: opacity 0.1s ease;
+}
+
+.star-modal-close:hover {
+  opacity: 0.6;
+}
+
+.star-modal-nav {
+  display: flex;
+
+  gap: 30px;
+
+  margin-bottom: 0;
+}
+
+.modal-tab {
+  background: none;
+
+  border: none;
+
+  padding: 0;
+
+  font-size: 18pt;
+
+  color: #BD9B46;
+
+  border-bottom: 3px solid transparent;
+
+  transition:
+    opacity 0.1s ease,
+    border-color 0.1s ease;
+
+  cursor: url('cursor2_imresizer.png') 16 16, auto;
+}
+
+
+@media (max-width: 600px) {
+  #star-modal {
+    font-size: 12pt;
+  }
+
+  #star-modal p {
+    font-size: 12pt;
+  }
+
+  #star-modal .modal-tab {
+    font-size: 12pt !important;
+  }
+
+  .modal-content{
+    font-size: 12pt !important;
+  }
 }

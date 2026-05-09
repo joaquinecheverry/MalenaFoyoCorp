@@ -292,7 +292,7 @@ function createModal() {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
+    width: 95vw;
     height: 100vh;
     z-index: 1000;
     display: none;

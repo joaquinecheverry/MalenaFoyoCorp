@@ -256,6 +256,10 @@ p:hover {
   #star-modal .modal-tab {
     font-size: 12pt !important;
   }
+
+  .modal-content{
+    font-size: 12pt !important;
+  }
 }
 
 /* Cart modal styles */
@@ -375,7 +379,7 @@ a:hover {
   top: 0;
   left: 0;
 
-  width: 100vw;
+  width: 95vw;
   height: 100vh;
 
   z-index: 1000;

@@ -1,5 +1,4 @@
 // ================== shared modal ==================
-
 function setupNavClickHandlers() {
 
   const aboutNav = document.getElementById('place');
@@ -48,7 +47,7 @@ function createModal() {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
+    width: 95vw;
     height: 100vh;
     z-index: 1000;
     display: none;
@@ -58,6 +57,7 @@ function createModal() {
     box-sizing: border-box;
   `;
 
+  // Close modal when clicking outside
   modal.onclick = (e) => {
 
     if (e.target === modal) {
@@ -91,13 +91,14 @@ function createModal() {
     background: none;
     border: none;
     font-size: 30px;
+    cursor: pointer;
     color: #BD9B46;
     width: 30px;
     height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: url('cursor2_imresizer.png') 16 16, auto;
+    cursor: url('cursor2_imresizer.png') 16 16, auto !important;
   `;
 
   closeBtn.onclick = hideModal;
@@ -107,52 +108,21 @@ function createModal() {
   nav.style.cssText = `
     display: flex;
     gap: 30px;
-    margin-bottom: 0;
+    margin-bottom: 0px;
+    border-bottom: 0px solid #BD9B46;
   `;
 
-  ['About', 'Cart'].forEach(name => {
+  const tabs = ['About', 'Cart'];
+
+  tabs.forEach((tabName) => {
 
     const tab = document.createElement('button');
 
-    tab.innerHTML = name;
+    tab.innerHTML = tabName;
 
     tab.className = 'modal-tab';
 
-    tab.style.cssText = `
-      background: none;
-      border: none;
-      padding: 0;
-      font-size: 18pt;
-      border-bottom: 3px solid transparent;
-      color: #BD9B46;
-      transition: all .1s;
-      cursor: url('cursor2_imresizer.png') 16 16, auto;
-    `;
-
-    tab.onmouseenter = () => {
-
-      tab.style.opacity = '0.6';
-      tab.style.borderBottomColor = '#BD9B46';
-
-    };
-
-    tab.onmouseleave = () => {
-
-      if (tab.innerHTML.toLowerCase() === currentModalTab) {
-
-        tab.style.opacity = '1';
-        tab.style.borderBottomColor = '#BD9B46';
-
-      } else {
-
-        tab.style.opacity = '1';
-        tab.style.borderBottomColor = 'transparent';
-
-      }
-
-    };
-
-    tab.onclick = () => showTab(name.toLowerCase());
+    tab.onclick = () => showTab(tabName.toLowerCase());
 
     nav.appendChild(tab);
 
@@ -217,11 +187,7 @@ function handleEscapeKey(e) {
 
 }
 
-let currentModalTab = 'about';
-
 function showTab(tabName) {
-
-  currentModalTab = tabName;
 
   const tabs = document.querySelectorAll('.modal-tab');
 
@@ -243,40 +209,43 @@ function showTab(tabName) {
 
   const contentArea = document.getElementById('modal-content');
 
-  if (!contentArea) return;
+  if (contentArea) {
 
-  switch (tabName) {
+    switch(tabName) {
 
-    case 'about':
+      case 'about':
 
-      contentArea.innerHTML = `
-        <p>
-          Malena Foyo is a fashion designer, artist and co-founder of WiG,
-          a creative platform where fashion, art, and design converge.
-        </p>
+        contentArea.innerHTML = `
+          <p>Malena Foyo is a fashion designer, artist and co-founder of WiG, a creative platform where fashion, art, 
+          and design converge. Her work spans clothing, jewelry, furniture, and contemporary art, always driven by a 
+          vision of empowered femininity that is at once sexy, chic, and bold.</p>
 
-        <p>
-          m@malenafoyo.com
-        </p>
+          <p>
+          With a design language rooted in sensuality, confidence, and experimentation, Malena creates pieces that blur
+          boundaries between disciplines. Through WiG and her independent projects, she continues to build a space where 
+          objects, fashion, and art exist side by side—inviting community, dialogue, and new ways of experiencing creativity
+          </p>
 
-        <p>
-          @malenafoyo
-        </p>
-      `;
+          <p>m@malenafoyo.com</p>
 
-      break;
+          <p>@malenafoyo</p>
+        `;
 
-    case 'cart':
+        break;
 
-      contentArea.innerHTML = '<p>Loading…</p>';
+      case 'cart':
 
-      if (typeof renderCartIntoModal === 'function') {
+        contentArea.innerHTML = '<p>Loading…</p>';
 
-        renderCartIntoModal();
+        if (typeof renderCartIntoModal === 'function') {
 
-      }
+          renderCartIntoModal();
 
-      break;
+        }
+
+        break;
+
+    }
 
   }
 
@@ -289,3 +258,4 @@ function openCartModal() {
   showTab('cart');
 
 }
+
