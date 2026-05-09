@@ -24,7 +24,7 @@ function setup() {
 
 function setupNavClickHandlers() {
   const aboutNav = document.getElementById('place');
-  const contactNav = document.getElementById('year');
+ const cartNav = document.getElementById('year');
   
   if (aboutNav) {
     aboutNav.style.cursor = 'pointer';
@@ -34,13 +34,17 @@ function setupNavClickHandlers() {
     };
   }
   
-  if (contactNav) {
-    contactNav.style.cursor = 'pointer';
-    contactNav.onclick = () => {
-      showModal();
-      showTab('contact');
-    };
-  }
+  
+
+if (cartNav) {
+  cartNav.style.cursor = 'pointer';
+  cartNav.innerHTML = 'CART';
+
+  cartNav.onclick = () => {
+    showModal();
+    showTab('cart');
+  };
+}
 }
 
 function initStars() {
@@ -308,7 +312,7 @@ function createModal() {
   const content = document.createElement('div');
   content.style.cssText = `
     background: white;
-    padding: 0px;
+    padding: 10px;
     max-width: 900px;
     width: 100%;
     position: relative;
@@ -332,6 +336,7 @@ function createModal() {
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: url('cursor2_imresizer.png') 16 16, auto !important;
   `;
   closeBtn.onclick = hideModal;
   
@@ -343,24 +348,23 @@ function createModal() {
     border-bottom: 0px solid #BD9B46;
   `;
   
-  const tabs = ['About', 'Contact', 'Cart'];
-  tabs.forEach((tabName, index) => {
-    const tab = document.createElement('button');
-    tab.innerHTML = tabName;
-    tab.className = 'modal-tab';
-    tab.style.cssText = `
-      background: none;
-      border: none;
-      padding: 0px 0;
-      font-size: 18pt;
-      cursor: pointer;
-      border-bottom: 3px solid transparent;
-      color: #BD9B46;
-      transition: all 0.1s;
-    `;
-    tab.onclick = () => showTab(tabName.toLowerCase());
-    nav.appendChild(tab);
-  });
+  const tabs = ['About', 'Cart'];
+
+tabs.forEach((tabName) => {
+
+  const tab = document.createElement('button');
+
+  tab.innerHTML = tabName;
+
+  tab.className = 'modal-tab';
+
+  tab.onclick = () => showTab(tabName.toLowerCase());
+
+  nav.appendChild(tab);
+
+  
+
+});
   
   const contentArea = document.createElement('div');
   contentArea.id = 'modal-content';
@@ -425,10 +429,6 @@ function showTab(tabName) {
           boundaries between disciplines. Through WiG and her independent projects, she continues to build a space where 
           objects, fashion, and art exist side by side—inviting community, dialogue, and new ways of experiencing creativity
           </p>
-        `;
-        break;
-      case 'contact':
-        contentArea.innerHTML = `
           <p>m@malenafoyo.com</p>
           <p>@malenafoyo</p>
         `;

@@ -93,7 +93,7 @@
 <div id="nav">
   <p id="place">ABOUT</p>
   <p id="name"><a href="../">MALENA FOYO</a></p>
-  <p id="year">CONTACT</p>
+  <p id="year">CART</p>
 </div>
   <div class="background-text">Golden Dreams</div>
   <div class="star1">★</div>
@@ -156,361 +156,348 @@
       </div>
     </main>
   </div>
+  <script src="modal.js"></script>
+  <script>
+document.addEventListener('DOMContentLoaded', () => {
 
+  const aboutNav = document.getElementById('place');
+  const cartNav = document.getElementById('year');
+
+  if (aboutNav) {
+    aboutNav.style.cursor = 'pointer';
+
+    aboutNav.addEventListener('click', () => {
+      showModal();
+      showTab('about');
+    });
+  }
+
+  if (cartNav) {
+    cartNav.style.cursor = 'pointer';
+
+    cartNav.addEventListener('click', () => {
+      showModal();
+      showTab('cart');
+
+      // optional: refresh live cart
+      if (typeof renderCartIntoModal === 'function') {
+        renderCartIntoModal();
+      }
+    });
+  }
+
+});
+</script>
   <script>
     /* ================= p5 stars (hover, bounce, click-to-modal) ================= */
-    const stars = [];
-    const kRestitution = 0.98;
-    let navHeight = 0;
 
-   function showImage(i) {
-      if (!gallery.length) return;
-      
-      const newIndex = (i + gallery.length) % gallery.length;
-      const direction = newIndex > galleryIndex ? 1 : -1; // 1 = right, -1 = left
-      const oldIndex = galleryIndex;
-      galleryIndex = newIndex;
-      
-      const img = gallery[galleryIndex];
-      const el = document.getElementById('pdp-image');
-      
-      // Only animate if we're actually changing images
-      if (oldIndex !== galleryIndex) {
-        // Slide out current image
-        el.style.transition = 'transform 0.4s ease-in-out, opacity 0.4s ease-in-out';
-        el.style.transform = `translateX(${direction * -100}%)`;
-        el.style.opacity = '0';
-        
-        // After slide out, swap image and slide in
-        setTimeout(() => {
-          el.src = img.url;
-          el.alt = img.alt || '';
-          el.style.transition = 'none';
-          el.style.transform = `translateX(${direction * 100}%)`;
-          
-          // Force reflow to ensure the transform applies before animating back
-          el.offsetHeight;
-          
-          el.style.transition = 'transform 0.4s ease-in-out, opacity 0.4s ease-in-out';
-          el.style.transform = 'translateX(0)';
-          el.style.opacity = '1';
-        }, 400);
-      } else {
-        el.src = img.url;
-        el.alt = img.alt || '';
-      }
-    }
-    
-    function setup() {
-      const navElement = document.getElementById('nav');
-      navHeight = navElement ? navElement.offsetHeight : 50;
-      createCanvas(windowWidth, windowHeight);
+const stars = [];
+const kRestitution = 0.98;
+let navHeight = 0;
 
-      const canvas = document.querySelector('canvas');
-      canvas.style.position = 'fixed';
-      canvas.style.top = '0';
-      canvas.style.left = '0';
-      canvas.style.zIndex = '-1';
-      canvas.style.pointerEvents = 'none';
-      canvas.style.cursor = 'default';
+function setup() {
+  const navElement = document.getElementById('nav');
+  navHeight = navElement ? navElement.offsetHeight : 50;
 
-      initStars();
-      createModal(); // modal on PDP too
+  createCanvas(windowWidth, windowHeight);
+
+  const canvas = document.querySelector('canvas');
+  canvas.style.position = 'fixed';
+  canvas.style.top = '0';
+  canvas.style.left = '0';
+  canvas.style.zIndex = '-1';
+  canvas.style.pointerEvents = 'none';
+  canvas.style.cursor = 'default';
+
+  initStars();
+
+  // from modal.js
+  createModal();
+}
+
+function initStars() {
+  stars.length = 0;
+
+  for (let i = 0; i < 3; i++) {
+    const star = {
+      position: {
+        x: random(50, width - 50),
+        y: random(navHeight + 50, height - 50)
+      },
+      velocity: {
+        x: random(-8, 8),
+        y: random(-8, 8)
+      },
+      size: 30,
+      baseSize: 30,
+      targetSize: 30,
+      color: 'white',
+      borderColor: 'rgb(231, 74, 231)',
+      rotation: 0,
+      rotationSpeed: random(-0.1, 0.1),
+      isHovered: false,
+      frozenVelocity: { x: 0, y: 0 }
+    };
+
+    if (abs(star.velocity.x) < 2) {
+      star.velocity.x = star.velocity.x > 0 ? 2 : -2;
     }
 
-    function initStars() {
-      stars.length = 0;
-      for (let i = 0; i < 3; i++) {
-        const star = {
-          position: { x: random(50, width - 50), y: random(navHeight + 50, height - 50) },
-          velocity: { x: random(-8, 8), y: random(-8, 8) },
-          size: 30, baseSize: 30, targetSize: 30,
-          color: 'white', borderColor: 'rgb(231, 74, 231)',
-          rotation: 0, rotationSpeed: random(-0.1, 0.1),
-          isHovered: false,
-          frozenVelocity: { x: 0, y: 0 }
-        };
-        if (abs(star.velocity.x) < 2) star.velocity.x = star.velocity.x > 0 ? 2 : -2;
-        if (abs(star.velocity.y) < 2) star.velocity.y = star.velocity.y > 0 ? 2 : -2;
-        stars.push(star);
-      }
+    if (abs(star.velocity.y) < 2) {
+      star.velocity.y = star.velocity.y > 0 ? 2 : -2;
     }
 
-    function draw() {
-      clear();
-      const navElement = document.getElementById('nav');
-      navHeight = navElement ? navElement.offsetHeight : 50;
-
-      checkHover(); // pause + grow on hover
-
-      for (const star of stars) {
-        updateStarSize(star);
-        if (!star.isHovered) stepStar(star);
-        drawStar(star);
-      }
-    }
-
-    function checkHover() {
-      let anyStarHovered = false;
-      const mousePos = { x: mouseX, y: mouseY };
-
-      for (const star of stars) {
-        const distance = dist(mousePos.x, mousePos.y, star.position.x, star.position.y);
-        const wasHovered = star.isHovered;
-
-        star.isHovered = distance < star.size / 2;
-        if (star.isHovered) anyStarHovered = true;
-
-        if (star.isHovered && !wasHovered) {
-          star.frozenVelocity.x = star.velocity.x;
-          star.frozenVelocity.y = star.velocity.y;
-          star.velocity.x = 0; star.velocity.y = 0;
-          star.targetSize = star.baseSize * 1.3;
-        }
-        if (!star.isHovered && wasHovered) {
-          star.velocity.x = star.frozenVelocity.x;
-          star.velocity.y = star.frozenVelocity.y;
-          star.targetSize = star.baseSize;
-        }
-      }
-      document.body.style.cursor = anyStarHovered ? 'pointer' : 'default';
-    }
-
-    function updateStarSize(star) { star.size += (star.targetSize - star.size) * 0.15; }
-
-    function stepStar(star){
-      star.position.x += star.velocity.x;
-      star.position.y += star.velocity.y;
-      star.rotation += star.rotationSpeed;
-
-      const radius = star.size / 2;
-
-      // walls + nav bar
-      if (star.position.x - radius < 0){
-        star.velocity.x = Math.abs(star.velocity.x) * kRestitution;
-        star.position.x = radius;
-      }
-      if (star.position.x + radius > width){
-        star.velocity.x = -Math.abs(star.velocity.x) * kRestitution;
-        star.position.x = width - radius;
-      }
-      if (star.position.y - radius < navHeight){
-        star.velocity.y = Math.abs(star.velocity.y) * kRestitution;
-        star.position.y = navHeight + radius;
-      }
-      if (star.position.y + radius > height){
-        star.velocity.y = -Math.abs(star.velocity.y) * kRestitution;
-        star.position.y = height - radius;
-      }
-
-      // bounce off PDP blocks (anything with .photodiv)
-      checkPhotoCollisions(star, radius);
-    }
-
-    function checkPhotoCollisions(star, radius){
-      const blocks = document.querySelectorAll('.photodiv, .back');
-      blocks.forEach(el => {
-        const r = el.getBoundingClientRect();
-        const left=r.left, right=r.right, top=r.top, bottom=r.bottom;
-
-        const starLeft   = star.position.x - radius;
-        const starRight  = star.position.x + radius;
-        const starTop    = star.position.y - radius;
-        const starBottom = star.position.y + radius;
-
-        const overlap = starRight > left && starLeft < right && starBottom > top && starTop < bottom;
-        if (!overlap) return;
-
-        const overlapLeft   = starRight - left;
-        const overlapRight  = right - starLeft;
-        const overlapTop    = starBottom - top;
-        const overlapBottom = bottom - starTop;
-        const minOverlap = Math.min(overlapLeft, overlapRight, overlapTop, overlapBottom);
-
-        if (minOverlap === overlapLeft){
-          star.velocity.x = -Math.abs(star.velocity.x) * kRestitution;
-          star.position.x = left - radius;
-        } else if (minOverlap === overlapRight){
-          star.velocity.x =  Math.abs(star.velocity.x) * kRestitution;
-          star.position.x = right + radius;
-        } else if (minOverlap === overlapTop){
-          star.velocity.y = -Math.abs(star.velocity.y) * kRestitution;
-          star.position.y = top - radius;
-        } else if (minOverlap === overlapBottom){
-          star.velocity.y =  Math.abs(star.velocity.y) * kRestitution;
-          star.position.y = bottom + radius;
-        }
-      });
-    }
-
-    function drawStar(star) {
-      push();
-      translate(star.position.x, star.position.y);
-      rotate(star.rotation);
-
-      const outerRadius = star.size / 2;
-      const innerRadius = outerRadius * 0.4;
-
-      fill(star.borderColor); noStroke();
-      drawRoundedStar(outerRadius + 6, innerRadius + 5);
-
-      fill(star.color); noStroke();
-      drawRoundedStar(outerRadius, innerRadius);
-
-      pop();
-    }
-
-    function drawRoundedStar(outerRadius, innerRadius) {
-      const points = [];
-      for (let i = 0; i < 10; i++) {
-        const angle = (i * PI) / 5;
-        const radius = i % 2 === 0 ? outerRadius : innerRadius;
-        points.push({ x: cos(angle) * radius, y: sin(angle) * radius });
-      }
-      beginShape();
-      for (let i = 0; i < points.length; i++) {
-        const current = points[i];
-        const next = points[(i + 1) % points.length];
-        const prev = points[(i - 1 + points.length) % points.length];
-
-        if (i % 2 === 0) {
-          const toPrev = createVector(prev.x - current.x, prev.y - current.y);
-          const toNext = createVector(next.x - current.x, next.y - current.y);
-          toPrev.normalize().mult(3); toNext.normalize().mult(3);
-          const cp1 = { x: current.x + toPrev.x, y: current.y + toPrev.y };
-          const cp2 = { x: current.x + toNext.x, y: current.y + toNext.y };
-          if (i === 0) vertex(cp1.x, cp1.y);
-          quadraticVertex(current.x, current.y, cp2.x, cp2.y);
-        } else {
-          vertex(current.x, current.y);
-        }
-      }
-      endShape(CLOSE);
-    }
-
-    /* click opens modal */
-    function mousePressed() {
-      for (const star of stars) {
-        const d = dist(mouseX, mouseY, star.position.x, star.position.y);
-        if (d < star.size / 2) { showModal(); break; }
-      }
-    }
-
-    /* ================= modal (About / Contact / Cart) ================= */
-    function createModal() {
-      const modal = document.createElement('div');
-      modal.id = 'star-modal';
-      modal.style.cssText = `
-        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-        z-index: 1000; display: none; justify-content: flex-start; align-items: center;
-        padding-left: 20px; box-sizing: border-box; cursor: url('cursor1_imresizer.png') 16 16, auto;
-`;
-
-      const content = document.createElement('div');
-      content.style.cssText = `
-        background: white; padding: 0px; max-width: 900px; width: 100%;
-        position: relative; color: #BD9B46; font-size: 18pt;`;
-
-      const closeBtn = document.createElement('button');
-      closeBtn.innerHTML = '×';
-      closeBtn.style.cssText = `
-        position: absolute; top: 10px; right: 15px; background: none; border: none;
-        font-size: 30px; cursor: pointer; color: #BD9B46; width: 30px; height: 30px;
-        display: flex; align-items: center; justify-content: center;  cursor: url('cursor2_imresizer.png') 16 16, auto;`;
-      closeBtn.onclick = hideModal;
-
-      const nav = document.createElement('div');
-      nav.style.cssText = `display:flex; gap:30px; margin-bottom:0;`;
-
-      ['About','Contact','Cart'].forEach(name=>{
-        const b = document.createElement('button');
-        b.textContent = name;
-        b.className = 'modal-tab';
-        b.style.cssText = `
-          background:none; border:none; padding:0; font-size:18pt; cursor:pointer;
-          border-bottom:3px solid transparent; color:#BD9B46; transition:all .1s;   cursor: url('cursor2_imresizer.png') 16 16, auto;`;
-        b.onclick = () => showTab(name.toLowerCase());
-        nav.appendChild(b);
-      });
-
-      const area = document.createElement('div');
-      area.id = 'modal-content';
-      area.style.cssText = `min-height:200px; line-height:1.6;`;
-
-      content.appendChild(closeBtn);
-      content.appendChild(nav);
-      content.appendChild(area);
-      modal.appendChild(content);
-      document.body.appendChild(modal);
-
-      showTab('about');
-    }
-    function showModal(){ const m = document.getElementById('star-modal'); if (m) m.style.display = 'flex'; }
-    function hideModal(){ const m = document.getElementById('star-modal'); if (m) m.style.display = 'none'; }
-function showTab(tabName){
-  const tabs = document.querySelectorAll('.modal-tab');
-  tabs.forEach(t=>{
-    if (t.textContent.toLowerCase() === tabName){
-      t.style.color='#BD9B46'; t.style.borderBottomColor='#BD9B46';
-    } else { t.style.color='#666'; t.style.borderBottomColor='transparent'; }
-  });
-document.addEventListener('DOMContentLoaded', () => {
-  const aboutLink = document.getElementById('place');   // ABOUT
-  const contactLink = document.getElementById('year');  // CONTACT
-
-  if (aboutLink) {
-    aboutLink.style.cursor = 'pointer';
-    aboutLink.addEventListener('click', () => {
-      showModal();
-      showTab('about');
-    });
-  }
-
-  if (contactLink) {
-    contactLink.style.cursor = 'pointer';
-    contactLink.addEventListener('click', () => {
-      showModal();
-      showTab('contact');
-    });
-  }
-});
-
-  const area = document.getElementById('modal-content');
-  if (!area) return;
-
-  if (tabName === 'about'){
-    area.innerHTML = `
-      <p>Malena Foyo is a fashion designer, artist and co-founder of WiG, a creative platform where fashion, art,
-      and design converge. Her work spans clothing, jewelry, furniture, and contemporary art.</p>`;
-  } else if (tabName === 'contact'){
-    area.innerHTML = `<p>m@malenafoyo.com</p><p>@malenafoyo</p>`;
-  } else if (tabName === 'cart'){
-    // show a quick placeholder, then render live cart
-    area.innerHTML = `<p>Loading…</p>`;
-    renderCartIntoModal();   // <— KEY LINE
+    stars.push(star);
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const aboutNav = document.getElementById('place');
-    const contactNav = document.getElementById('year');
+function draw() {
+  clear();
 
-    if (aboutNav) {
-      aboutNav.style.cursor = 'pointer';
-      aboutNav.addEventListener('click', () => {
-        showModal();
-        showTab('about');
-      });
+  const navElement = document.getElementById('nav');
+  navHeight = navElement ? navElement.offsetHeight : 50;
+
+  checkHover();
+
+  for (const star of stars) {
+    updateStarSize(star);
+
+    if (!star.isHovered) {
+      stepStar(star);
     }
 
-    if (contactNav) {
-      contactNav.style.cursor = 'pointer';
-      contactNav.addEventListener('click', () => {
-        showModal();
-        showTab('contact');
-      });
+    drawStar(star);
+  }
+}
+
+function checkHover() {
+  let anyStarHovered = false;
+  const mousePos = { x: mouseX, y: mouseY };
+
+  for (const star of stars) {
+    const distance = dist(
+      mousePos.x,
+      mousePos.y,
+      star.position.x,
+      star.position.y
+    );
+
+    const wasHovered = star.isHovered;
+
+    star.isHovered = distance < star.size / 2;
+
+    if (star.isHovered) {
+      anyStarHovered = true;
+    }
+
+    if (star.isHovered && !wasHovered) {
+      star.frozenVelocity.x = star.velocity.x;
+      star.frozenVelocity.y = star.velocity.y;
+
+      star.velocity.x = 0;
+      star.velocity.y = 0;
+
+      star.targetSize = star.baseSize * 1.3;
+    }
+
+    if (!star.isHovered && wasHovered) {
+      star.velocity.x = star.frozenVelocity.x;
+      star.velocity.y = star.frozenVelocity.y;
+
+      star.targetSize = star.baseSize;
+    }
+  }
+
+  document.body.style.cursor = anyStarHovered
+    ? "url('cursor2_imresizer.png') 16 16, auto"
+    : "url('cursor1_imresizer.png') 16 16, auto";
+}
+
+function updateStarSize(star) {
+  const sizeDiff = star.targetSize - star.size;
+  star.size += sizeDiff * 0.15;
+}
+
+function stepStar(star) {
+  star.position.x += star.velocity.x;
+  star.position.y += star.velocity.y;
+
+  star.rotation += star.rotationSpeed;
+
+  const radius = star.size / 2;
+
+  if (star.position.x - radius < 0) {
+    star.velocity.x = abs(star.velocity.x) * kRestitution;
+    star.position.x = radius;
+  }
+
+  if (star.position.x + radius > width) {
+    star.velocity.x = -abs(star.velocity.x) * kRestitution;
+    star.position.x = width - radius;
+  }
+
+  if (star.position.y - radius < navHeight) {
+    star.velocity.y = abs(star.velocity.y) * kRestitution;
+    star.position.y = navHeight + radius;
+  }
+
+  if (star.position.y + radius > height) {
+    star.velocity.y = -abs(star.velocity.y) * kRestitution;
+    star.position.y = height - radius;
+  }
+
+  checkPhotoCollisions(star, radius);
+}
+
+function checkPhotoCollisions(star, radius) {
+  const blocks = document.querySelectorAll('.photodiv, .back');
+
+  blocks.forEach(el => {
+    const r = el.getBoundingClientRect();
+
+    const left = r.left;
+    const right = r.right;
+    const top = r.top;
+    const bottom = r.bottom;
+
+    const starLeft = star.position.x - radius;
+    const starRight = star.position.x + radius;
+    const starTop = star.position.y - radius;
+    const starBottom = star.position.y + radius;
+
+    const overlap =
+      starRight > left &&
+      starLeft < right &&
+      starBottom > top &&
+      starTop < bottom;
+
+    if (!overlap) return;
+
+    const overlapLeft = starRight - left;
+    const overlapRight = right - starLeft;
+    const overlapTop = starBottom - top;
+    const overlapBottom = bottom - starTop;
+
+    const minOverlap = Math.min(
+      overlapLeft,
+      overlapRight,
+      overlapTop,
+      overlapBottom
+    );
+
+    if (minOverlap === overlapLeft) {
+      star.velocity.x = -abs(star.velocity.x) * kRestitution;
+      star.position.x = left - radius;
+    } else if (minOverlap === overlapRight) {
+      star.velocity.x = abs(star.velocity.x) * kRestitution;
+      star.position.x = right + radius;
+    } else if (minOverlap === overlapTop) {
+      star.velocity.y = -abs(star.velocity.y) * kRestitution;
+      star.position.y = top - radius;
+    } else if (minOverlap === overlapBottom) {
+      star.velocity.y = abs(star.velocity.y) * kRestitution;
+      star.position.y = bottom + radius;
     }
   });
+}
+
+function drawStar(star) {
+  push();
+
+  translate(star.position.x, star.position.y);
+  rotate(star.rotation);
+
+  const outerRadius = star.size / 2;
+  const innerRadius = outerRadius * 0.4;
+
+  fill(star.borderColor);
+  noStroke();
+  drawRoundedStar(outerRadius + 6, innerRadius + 5);
+
+  fill(star.color);
+  noStroke();
+  drawRoundedStar(outerRadius, innerRadius);
+
+  pop();
+}
+
+function drawRoundedStar(outerRadius, innerRadius) {
+  const points = [];
+
+  for (let i = 0; i < 10; i++) {
+    const angle = (i * PI) / 5;
+    const radius = i % 2 === 0 ? outerRadius : innerRadius;
+
+    points.push({
+      x: cos(angle) * radius,
+      y: sin(angle) * radius
+    });
+  }
+
+  beginShape();
+
+  for (let i = 0; i < points.length; i++) {
+    const current = points[i];
+    const next = points[(i + 1) % points.length];
+    const prev = points[(i - 1 + points.length) % points.length];
+
+    if (i % 2 === 0) {
+      const toPrev = createVector(
+        prev.x - current.x,
+        prev.y - current.y
+      );
+
+      const toNext = createVector(
+        next.x - current.x,
+        next.y - current.y
+      );
+
+      toPrev.normalize().mult(3);
+      toNext.normalize().mult(3);
+
+      const cp1 = {
+        x: current.x + toPrev.x,
+        y: current.y + toPrev.y
+      };
+
+      const cp2 = {
+        x: current.x + toNext.x,
+        y: current.y + toNext.y
+      };
+
+      if (i === 0) {
+        vertex(cp1.x, cp1.y);
+      }
+
+      quadraticVertex(
+        current.x,
+        current.y,
+        cp2.x,
+        cp2.y
+      );
+    } else {
+      vertex(current.x, current.y);
+    }
+  }
+
+  endShape(CLOSE);
+}
+
+function mousePressed() {
+  for (const star of stars) {
+    const d = dist(
+      mouseX,
+      mouseY,
+      star.position.x,
+      star.position.y
+    );
+
+    if (d < star.size / 2) {
+      showModal();
+      break;
+    }
+  }
+}
 
     /* ================= Shopify PDP (live data + gallery) ================= */
     const SHOPIFY_DOMAIN = 'malenafoyo.myshopify.com';
